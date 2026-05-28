@@ -67,7 +67,6 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
   transform:translateY(0) scale(1);
 }
 
-/* tail */
 .chat-bubble::after{
   content:'';
   position:absolute;
@@ -85,7 +84,7 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
   border-left-color:rgba(10,20,40,.95);
 }
 
-/* typing cursor */
+/* cursor */
 .cursor{
   display:inline-block;
   width:6px;
@@ -110,15 +109,16 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
     <span id="typedText"></span><span class="cursor" id="cursor"></span>
   </div>
 
-  <!-- CLEO (UNCHANGED — PASTE YOUR ORIGINAL SVG HERE) -->
+  <!-- CLEO (UNCHANGED - paste your full original SVG here) -->
   <div class="cleo-inner" id="cleoInner">
 
     <div class="cleo-svg-wrap">
-      <!-- YOUR ORIGINAL CLEO SVG GOES HERE (UNCHANGED) -->
+      <!-- 🔴 YOUR ORIGINAL CLEO SVG GOES HERE (DO NOT CHANGE) -->
     </div>
 
     <div class="cleo-name">CLEO</div>
   </div>
+
 </div>
 
 <script>
@@ -137,24 +137,34 @@ const messages = [
 let lastMessageIndex = -1;
 
 /* ── ELEMENTS ── */
-const bubble = document.getElementById('chatBubble');
-const cleo = document.getElementById('cleoInner');
-const typed = document.getElementById('typedText');
-const cursor = document.getElementById('cursor');
+const bubble = document.getElementById("chatBubble");
+const cleo = document.getElementById("cleoInner");
+const typed = document.getElementById("typedText");
+const cursor = document.getElementById("cursor");
 
-/* ── TYPING ENGINE ── */
+/* ── STATE ── */
 let segMap = [];
 let i = 0;
-let typingTimer;
+let typingTimer = null;
+let hideTimer = null;
 
-function buildMessage(text){
-  segMap = [...text];
-  i = 0;
+/* ── RESET SYSTEM (IMPORTANT FIX) ── */
+function resetTyping(){
+  clearTimeout(typingTimer);
   typed.innerHTML = "";
   typed.appendChild(cursor);
   cursor.style.display = "inline-block";
+  segMap = [];
+  i = 0;
 }
 
+/* ── BUILD MESSAGE ── */
+function buildMessage(text){
+  resetTyping();
+  segMap = [...text];
+}
+
+/* ── TYPE ENGINE ── */
 function typeNext(){
   if(i >= segMap.length){
     cursor.style.display = "none";
@@ -168,7 +178,7 @@ function typeNext(){
 
   typed.insertBefore(span, cursor);
 
-  typingTimer = setTimeout(typeNext, 25 + Math.random()*25);
+  typingTimer = setTimeout(typeNext, 22 + Math.random()*28);
 }
 
 /* ── POSITIONING ── */
@@ -180,39 +190,39 @@ function positionBubble(){
   const spaceRight = window.innerWidth - r.right;
 
   if(spaceRight > bw + margin){
-    bubble.style.left = (r.right + margin) + 'px';
+    bubble.style.left = (r.right + margin) + "px";
     bubble.classList.remove("right");
   } else {
-    bubble.style.left = (r.left - bw - margin) + 'px';
+    bubble.style.left = (r.left - bw - margin) + "px";
     bubble.classList.add("right");
   }
 
-  bubble.style.top = (r.top + r.height/2 - 60) + 'px';
+  bubble.style.top = (r.top + r.height/2 - 60) + "px";
 }
 
-/* ── SHOW / HIDE ── */
-let hideTimer;
-
+/* ── SHOW (FIXED MESSAGE SWITCHING) ── */
 function show(){
   clearTimeout(hideTimer);
 
   positionBubble();
   bubble.classList.add("show");
 
-  // pick new message (no repeat)
-  let idx;
-  do {
-    idx = Math.floor(Math.random() * messages.length);
-  } while(idx === lastMessageIndex && messages.length > 1);
+  let idx = Math.floor(Math.random() * messages.length);
+
+  if(messages.length > 1){
+    while(idx === lastMessageIndex){
+      idx = Math.floor(Math.random() * messages.length);
+    }
+  }
 
   lastMessageIndex = idx;
 
   buildMessage(messages[idx]);
 
-  clearTimeout(typingTimer);
-  setTimeout(typeNext, 250);
+  setTimeout(typeNext, 200);
 }
 
+/* ── HIDE ── */
 function hide(){
   hideTimer = setTimeout(()=>{
     bubble.classList.remove("show");
@@ -225,11 +235,11 @@ cleo.addEventListener("mouseleave", hide);
 bubble.addEventListener("mouseenter", ()=>clearTimeout(hideTimer));
 bubble.addEventListener("mouseleave", hide);
 
-/* ── SUBTLE FOLLOW MOTION ── */
-cleo.addEventListener('mousemove',(e)=>{
-  const x=(e.clientX-window.innerWidth/2)*0.01;
-  const y=(e.clientY-window.innerHeight/2)*0.01;
-  bubble.style.transform=`translate(${x}px,${y}px) scale(1)`;
+/* ── SUBTLE FOLLOW EFFECT ── */
+cleo.addEventListener("mousemove", (e)=>{
+  const x = (e.clientX - window.innerWidth/2) * 0.01;
+  const y = (e.clientY - window.innerHeight/2) * 0.01;
+  bubble.style.transform = `translate(${x}px,${y}px) scale(1)`;
 });
 
 </script>
