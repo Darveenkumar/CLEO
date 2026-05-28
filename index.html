@@ -3,395 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<title>CLEO - Interactive Mascot</title>
 <style>
-  :root{
-    --ink:#090b11;
-    --ink-2:#0f1219;
-    --body-hi:#c3cbe8;
-    --body-mid:#8b93bd;
-    --body-lo:#666e9c;
-    --screen-hi:#191c27;
-    --screen-lo:#0c0e15;
-    --eye-core:#ffe4c4;
-    --eye-glow:#ff9d6c;
-    --accent:#ff9d6c;
-    --text:#eceef6;
-    --muted:#8b90a8;
-    --bubble-bg:rgba(20,23,33,.82);
-    --bubble-bd:rgba(255,255,255,.09);
-  }
+/* Root variables added to make the file completely standalone */
+:root {
+  --color-background-primary: #ffffff;
+  --color-background-tertiary: #f4f3ff;
+  --color-text-primary: #2d2375;
+  --color-border-secondary: #dcd7fc;
+  --border-radius-lg: 16px;
+}
 
-  *{box-sizing:border-box;margin:0;padding:0;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:var(--color-background-tertiary);display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 
-  html,body{height:100%;}
+#cleoInner{cursor:pointer;display:inline-block;animation:drift 4s ease-in-out infinite}
+@keyframes drift{
+  0%  {transform:translate(0px, 0px) rotate(-0.5deg)}
+  25% {transform:translate(2px, -3px) rotate(0.5deg)}
+  50% {transform:translate(-2px, -2px) rotate(-0.3deg)}
+  75% {transform:translate(1px, 1px) rotate(0.4deg)}
+  100%{transform:translate(0px, 0px) rotate(-0.5deg)}
+}
 
-  body{
-    background:
-      radial-gradient(900px 700px at 50% 38%, #161a28 0%, transparent 60%),
-      radial-gradient(1200px 900px at 80% 100%, #12141f 0%, transparent 55%),
-      var(--ink);
-    color:var(--text);
-    font-family:"Nunito",system-ui,sans-serif;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    position:relative;
-  }
+#chatBubble{position:fixed;background:var(--color-background-primary);border:1px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:14px 18px;min-width:180px;max-width:260px;font-size:14px;line-height:1.5;color:var(--color-text-primary);opacity:0;pointer-events:none;transition:opacity .25s cubic-bezier(0.4, 0, 0.2, 1),transform .25s cubic-bezier(0.4, 0, 0.2, 1);transform:translateX(-12px);z-index:200;box-shadow:0 10px 25px rgba(124,109,224,0.12)}
+#chatBubble.show{opacity:1;pointer-events:auto;transform:translateX(0)}
+#chatBubble::before{content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-right-color:var(--color-border-secondary);border-left:0}
+#chatBubble::after{content:'';position:absolute;left:-6.5px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-right-color:var(--color-background-primary);border-left:0}
 
-  /* fine grain overlay */
-  body::after{
-    content:"";
-    position:fixed; inset:0;
-    pointer-events:none;
-    opacity:.05;
-    mix-blend-mode:overlay;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
-  /* drifting ambient motes */
-  .mote{
-    position:fixed;
-    border-radius:50%;
-    background:radial-gradient(circle, rgba(255,180,140,.55), transparent 70%);
-    pointer-events:none;
-    animation:drift linear infinite;
-  }
-  @keyframes drift{
-    0%{transform:translateY(20px);opacity:0;}
-    15%{opacity:.7;}
-    85%{opacity:.7;}
-    100%{transform:translateY(-120px);opacity:0;}
-  }
-
-  .stage{
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:34px;
-  }
-
-  /* ── CLEO ── */
-  .cleo{
-    position:relative;
-    width:240px;
-    cursor:pointer;
-    animation:float 6s ease-in-out infinite;
-    -webkit-tap-highlight-color:transparent;
-  }
-  @keyframes float{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-14px);}
-  }
-
-  .halo{
-    position:absolute;
-    inset:-26% -18% -10%;
-    border-radius:50%;
-    background:radial-gradient(circle at 50% 42%, rgba(255,157,108,.30), rgba(140,150,210,.12) 42%, transparent 68%);
-    filter:blur(8px);
-    pointer-events:none;
-    animation:breathe 5s ease-in-out infinite;
-    z-index:0;
-  }
-  @keyframes breathe{
-    0%,100%{opacity:.65;transform:scale(.97);}
-    50%{opacity:1;transform:scale(1.04);}
-  }
-
-  .face{position:relative;z-index:1;display:block;width:100%;height:auto;overflow:visible;}
-
-  .hint{
-    font-size:13px;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    color:var(--muted);
-    opacity:.7;
-    display:flex;
-    align-items:center;
-    gap:9px;
-  }
-  .hint::before,.hint::after{
-    content:"";width:26px;height:1px;
-    background:linear-gradient(90deg,transparent,var(--muted));
-    opacity:.5;
-  }
-  .hint::after{background:linear-gradient(90deg,var(--muted),transparent);}
-
-  /* ── CHAT BUBBLE ── */
-  .bubble{
-    position:fixed;
-    z-index:50;
-    width:max-content;
-    max-width:262px;
-    padding:14px 18px 15px;
-    border-radius:20px 20px 20px 6px;
-    background:var(--bubble-bg);
-    border:1px solid var(--bubble-bd);
-    backdrop-filter:blur(14px) saturate(1.2);
-    -webkit-backdrop-filter:blur(14px) saturate(1.2);
-    box-shadow:0 18px 48px -18px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.02) inset;
-    opacity:0;
-    transform:translateY(10px) scale(.95);
-    transform-origin:left center;
-    pointer-events:none;
-    transition:opacity .28s ease, transform .4s cubic-bezier(.18,.9,.24,1);
-  }
-  .bubble.show{
-    opacity:1;
-    transform:translateY(0) scale(1);
-    pointer-events:auto;
-  }
-  /* tail pointing back at CLEO (≈100px from top, matching script math) */
-  .bubble::before{
-    content:"";
-    position:absolute;
-    left:-7px; top:100px;
-    width:16px; height:16px;
-    transform:translateY(-50%) rotate(45deg);
-    background:var(--bubble-bg);
-    border-left:1px solid var(--bubble-bd);
-    border-bottom:1px solid var(--bubble-bd);
-    border-radius:0 0 0 5px;
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-  }
-
-  .bub-head{
-    display:flex;align-items:center;gap:7px;
-    font-family:"Fraunces",serif;
-    font-weight:600;
-    font-size:13px;
-    letter-spacing:.14em;
-    color:var(--accent);
-    margin-bottom:7px;
-  }
-  .bub-head .dot{
-    width:7px;height:7px;border-radius:50%;
-    background:var(--accent);
-    box-shadow:0 0 0 0 rgba(255,157,108,.6);
-    animation:ping 2.2s ease-out infinite;
-  }
-  @keyframes ping{
-    0%{box-shadow:0 0 0 0 rgba(255,157,108,.55);}
-    70%,100%{box-shadow:0 0 0 8px rgba(255,157,108,0);}
-  }
-
-  #typedText{
-    font-size:15.5px;
-    line-height:1.5;
-    color:var(--text);
-    font-weight:600;
-    word-break:break-word;
-  }
-  #typedText span{
-    animation:charIn .18s ease both;
-  }
-  @keyframes charIn{from{opacity:0;}to{opacity:1;}}
-
-  .cursor{
-    display:inline-block;
-    width:2px; height:1.05em;
-    margin-left:1px;
-    transform:translateY(2px);
-    background:var(--accent);
-    border-radius:2px;
-    animation:caret 1s steps(1) infinite;
-  }
-  @keyframes caret{50%{opacity:0;}}
+#cursor{display:inline-block;width:2px;height:1.1em;background:var(--color-text-primary);vertical-align:text-bottom;margin-left:2px;animation:blink-cur .7s step-end infinite}
+@keyframes blink-cur{0%,100%{opacity:1}50%{opacity:0}}
 </style>
 </head>
 <body>
 
-  <!-- ambient motes -->
-  <div class="mote" style="width:5px;height:5px;left:18%;top:70%;animation-duration:11s;animation-delay:0s;"></div>
-  <div class="mote" style="width:3px;height:3px;left:30%;top:80%;animation-duration:14s;animation-delay:2s;"></div>
-  <div class="mote" style="width:6px;height:6px;left:72%;top:75%;animation-duration:9s;animation-delay:1s;"></div>
-  <div class="mote" style="width:4px;height:4px;left:84%;top:82%;animation-duration:13s;animation-delay:4s;"></div>
-  <div class="mote" style="width:3px;height:3px;left:55%;top:78%;animation-duration:12s;animation-delay:6s;"></div>
+<div id="cleoInner">
+  <svg width="140" height="170" viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="bodyGrad" cx="50%" cy="40%" r="55%">
+        <stop offset="0%" stop-color="#a89cf7"/>
+        <stop offset="100%" stop-color="#7c6de0"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="110" cy="160" rx="72" ry="80" fill="url(#bodyGrad)"/>
+    <ellipse cx="46" cy="168" rx="18" ry="30" fill="#9183e8" transform="rotate(-15 46 168)"/>
+    <ellipse cx="174" cy="168" rx="18" ry="30" fill="#9183e8" transform="rotate(15 174 168)"/>
+    <rect x="93" y="112" width="34" height="22" rx="10" fill="#9183e8"/>
+    <ellipse cx="110" cy="95" rx="58" ry="56" fill="url(#bodyGrad)"/>
+    <ellipse cx="54" cy="82" rx="14" ry="18" fill="#9183e8"/>
+    <ellipse cx="54" cy="82" rx="7" ry="10" fill="#c8bcf8"/>
+    <ellipse cx="166" cy="82" rx="14" ry="18" fill="#9183e8"/>
+    <ellipse cx="166" cy="82" rx="7" ry="10" fill="#c8bcf8"/>
+    <ellipse cx="110" cy="98" rx="44" ry="42" fill="#e8e2ff"/>
+    <ellipse cx="84" cy="90" rx="16" ry="16" fill="white"/>
+    <ellipse cx="136" cy="90" rx="16" ry="16" fill="white"/>
+    <ellipse id="pupilL" cx="84" cy="92" rx="8" ry="9" fill="#3d2ea6"/>
+    <ellipse id="pupilR" cx="136" cy="92" rx="8" ry="9" fill="#3d2ea6"/>
+    <circle cx="87" cy="88" r="3" fill="white" opacity=".7"/>
+    <circle cx="139" cy="88" r="3" fill="white" opacity=".7"/>
+    <ellipse id="lidLtop" cx="84" cy="72" rx="15" ry="0" fill="#7c6de0"/>
+    <ellipse id="lidRtop" cx="136" cy="72" rx="15" ry="0" fill="#7c6de0"/>
+    <ellipse id="lidLbot" cx="84" cy="100" rx="15" ry="0" fill="#7c6de0"/>
+    <ellipse id="lidRbot" cx="136" cy="100" rx="15" ry="0" fill="#7c6de0"/>
+    <ellipse cx="110" cy="104" rx="6" ry="4" fill="#a89cf7"/>
+    <path d="M96 115 Q110 127 124 115" stroke="#7c6de0" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="72" cy="108" rx="10" ry="6" fill="#f4a0c0" opacity=".5"/>
+    <ellipse cx="148" cy="108" rx="10" ry="6" fill="#f4a0c0" opacity=".5"/>
+    <ellipse cx="110" cy="180" rx="40" ry="34" fill="#c8bcf8" opacity=".6"/>
+    <ellipse cx="82" cy="235" rx="20" ry="10" fill="#7c6de0"/>
+    <ellipse cx="138" cy="235" rx="20" ry="10" fill="#7c6de0"/>
+  </svg>
+</div>
 
-  <div class="stage">
-    <div id="cleoInner" class="cleo">
-      <div class="halo"></div>
-      <svg class="face" viewBox="0 0 220 230" xmlns="http://www.w3.org/2000/svg" aria-label="CLEO">
-        <defs>
-          <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="var(--body-hi)"/>
-            <stop offset="0.5" stop-color="var(--body-mid)"/>
-            <stop offset="1" stop-color="var(--body-lo)"/>
-          </linearGradient>
-          <!-- userSpaceOnUse so lids share the EXACT screen gradient → seamless blink -->
-          <linearGradient id="screenGrad" gradientUnits="userSpaceOnUse" x1="0" y1="56" x2="0" y2="116">
-            <stop offset="0" stop-color="var(--screen-hi)"/>
-            <stop offset="1" stop-color="var(--screen-lo)"/>
-          </linearGradient>
-          <radialGradient id="eyeGrad" cx="0.5" cy="0.42" r="0.65">
-            <stop offset="0" stop-color="#fff"/>
-            <stop offset="0.35" stop-color="var(--eye-core)"/>
-            <stop offset="1" stop-color="var(--eye-glow)"/>
-          </radialGradient>
-          <filter id="eyeGlow" x="-90%" y="-90%" width="280%" height="280%">
-            <feGaussianBlur stdDeviation="3.4" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="3"/>
-          </filter>
-          <clipPath id="screenClip">
-            <rect x="52" y="56" width="116" height="60" rx="27"/>
-          </clipPath>
-        </defs>
-
-        <!-- ground shadow -->
-        <ellipse cx="110" cy="214" rx="62" ry="12" fill="#000" opacity="0.35" filter="url(#soft)"/>
-
-        <!-- antenna -->
-        <line x1="110" y1="44" x2="110" y2="26" stroke="var(--body-mid)" stroke-width="4" stroke-linecap="round"/>
-        <circle cx="110" cy="20" r="6" fill="var(--accent)"/>
-        <circle cx="110" cy="20" r="6" fill="var(--accent)" filter="url(#eyeGlow)" opacity="0.8"/>
-
-        <!-- body -->
-        <rect x="30" y="42" width="160" height="146" rx="62" fill="url(#bodyGrad)"/>
-        <!-- top sheen on body -->
-        <rect x="44" y="52" width="132" height="40" rx="20" fill="#fff" opacity="0.12" filter="url(#soft)"/>
-
-        <!-- face screen -->
-        <rect x="52" y="56" width="116" height="60" rx="27" fill="url(#screenGrad)"/>
-        <rect x="52" y="56" width="116" height="60" rx="27" fill="none" stroke="#000" stroke-opacity="0.35" stroke-width="1.5"/>
-
-        <!-- eyes -->
-        <g filter="url(#eyeGlow)">
-          <ellipse cx="84"  cy="86" rx="11" ry="13" fill="url(#eyeGrad)"/>
-          <ellipse cx="136" cy="86" rx="11" ry="13" fill="url(#eyeGrad)"/>
-        </g>
-        <!-- catchlights -->
-        <circle cx="80"  cy="81" r="2.6" fill="#fff" opacity="0.9"/>
-        <circle cx="132" cy="81" r="2.6" fill="#fff" opacity="0.9"/>
-
-        <!-- LIDS (driven by the unchanged script). Fill = same screen gradient → seamless. -->
-        <ellipse id="lidLtop" cx="84"  cy="72"  rx="15" ry="0" fill="url(#screenGrad)"/>
-        <ellipse id="lidLbot" cx="84"  cy="100" rx="15" ry="0" fill="url(#screenGrad)"/>
-        <ellipse id="lidRtop" cx="136" cy="72"  rx="15" ry="0" fill="url(#screenGrad)"/>
-        <ellipse id="lidRbot" cx="136" cy="100" rx="15" ry="0" fill="url(#screenGrad)"/>
-
-        <!-- glass reflection over the whole screen (above lids → consistent open/closed) -->
-        <g clip-path="url(#screenClip)">
-          <path d="M40 56 L96 56 L62 116 L40 116 Z" fill="#fff" opacity="0.06"/>
-          <path d="M104 56 L120 56 L92 116 L76 116 Z" fill="#fff" opacity="0.04"/>
-        </g>
-      </svg>
-    </div>
-
-    <div class="hint">hover over me</div>
-  </div>
-
-  <!-- chat bubble (kept outside .stage so its fixed positioning isn't affected by transforms) -->
-  <div id="chatBubble" class="bubble">
-    <div class="bub-head"><span class="dot"></span>CLEO</div>
-    <div class="bubble-inner"><span id="typedText"><span id="cursor" class="cursor"></span></span></div>
-  </div>
+<div id="chatBubble"><span id="typedText"><span id="cursor"></span></span></div>
 
 <script>
-// ── blink (UNCHANGED) ──
+(function(){
+// Procedural eye-blinking logic
 function blink(){
-const cS=7,oS=12,cD=70,oD=150,mR=14;
-let f=0;
-const eyes=[{top:'lidLtop',bot:'lidLbot',cx:84,eT:72,eB:100},{top:'lidRtop',bot:'lidRbot',cx:136,eT:72,eB:100}];
-const eI=t=>t*t*t, eO=t=>1-Math.pow(1-t,2.5);
-function sl(p){const ry=p*mR;eyes.forEach(e=>{const tl=document.getElementById(e.top),bl=document.getElementById(e.bot);if(!tl||!bl)return;tl.setAttribute('rx',15);tl.setAttribute('ry',ry);tl.setAttribute('cx',e.cx);tl.setAttribute('cy',e.eT+ry);bl.setAttribute('rx',15);bl.setAttribute('ry',ry*.6);bl.setAttribute('cx',e.cx);bl.setAttribute('cy',e.eB-ry*.6);});}
-const ci=setInterval(()=>{f++;sl(eI(f/cS));if(f>=cS){clearInterval(ci);f=0;setTimeout(()=>{const oi=setInterval(()=>{f++;sl(eO(1-f/oS));if(f>=oS){clearInterval(oi);sl(0);setTimeout(blink,2800+Math.random()*3500);}},oD/oS);},45);}},cD/cS);
+  const cS=7,oS=12,cD=70,oD=150,mR=14;let f=0;
+  const eyes=[{top:'lidLtop',bot:'lidLbot',cx:84,eT:72,eB:100},{top:'lidRtop',bot:'lidRbot',cx:136,eT:72,eB:100}];
+  const eI=t=>t*t*t,eO=t=>1-Math.pow(1-t,2.5);
+  function sl(p){
+    const ry=p*mR;
+    eyes.forEach(e=>{
+      const tl=document.getElementById(e.top),bl=document.getElementById(e.bot);
+      if(!tl||!bl)return;
+      tl.setAttribute('rx',15);tl.setAttribute('ry',ry);tl.setAttribute('cx',e.cx);tl.setAttribute('cy',e.eT+ry);
+      bl.setAttribute('rx',15);bl.setAttribute('ry',ry*.6);bl.setAttribute('cx',e.cx);bl.setAttribute('cy',e.eB-ry*.6);
+    });
+  }
+  const ci=setInterval(()=>{
+    f++;sl(eI(f/cS));
+    if(f>=cS){
+      clearInterval(ci);f=0;
+      setTimeout(()=>{
+        const oi=setInterval(()=>{
+          f++;sl(eO(1-f/oS));
+          if(f>=oS){clearInterval(oi);sl(0);setTimeout(blink,2800+Math.random()*3500);}
+        },oD/oS);
+      },45);
+    }
+  },cD/cS);
 }
 setTimeout(blink,2000);
 
-// ── HOOVER MESSAGES (NEW SYSTEM) ──
-const messages = [
-"Hi there! 👋 I'm CLEO — your assistant ✨",
-"Need a hand with anything?",
-"I'm here if you're exploring something.",
-"Hello again 👀",
-"What are we working on today?",
-"I’ve got you covered.",
-"Ask me anything."
-];
-let lastIndex = -1;
+// Interaction & Typing logic
+const messages=["Hi there! I'm CLEO","Need a hand?","What are we working on?","Hello again","I've got you covered.","Ask me anything.","I'm exploring with you!"];
+let lastIndex=-1,segMap=[],charIdx=0,typingTimer=null;
+const bubble=document.getElementById('chatBubble');
+const cleoEl=document.getElementById('cleoInner');
+const typed=document.getElementById('typedText');
+const cursor=document.getElementById('cursor');
 
-// ── TYPING STATE ──
-let segMap = [];
-let charIdx = 0;
-let typingTimer = null;
-const bubble = document.getElementById('chatBubble');
-const cleoEl = document.getElementById('cleoInner');
-const typed = document.getElementById('typedText');
-const cursor = document.getElementById('cursor');
-
-function resetTyping(){
-clearTimeout(typingTimer);
-typed.innerHTML = "";
-typed.appendChild(cursor);
-cursor.style.display = "inline-block";
-segMap = [];
-charIdx = 0;
-}
-
-function buildMessage(text){
-resetTyping();
-segMap = [...text];
-}
-
+function resetTyping(){clearTimeout(typingTimer);typed.innerHTML='';typed.appendChild(cursor);cursor.style.display='inline-block';segMap=[];charIdx=0;}
+function buildMessage(text){resetTyping();segMap=[...text];}
 function typeNext(){
-if(charIdx >= segMap.length){
-cursor.style.display = "none";
-return;
-}
-const ch = segMap[charIdx++];
-const span = document.createElement("span");
-span.textContent = ch;
-typed.insertBefore(span, cursor);
-typingTimer = setTimeout(typeNext, 22 + Math.random()*28);
+  if(charIdx>=segMap.length){cursor.style.display='none';return;}
+  const ch=segMap[charIdx++];
+  const span=document.createElement('span');
+  span.textContent=ch;
+  typed.insertBefore(span,cursor);
+  typingTimer=setTimeout(typeNext,22+Math.random()*28);
 }
 
-// ── POSITION (UNCHANGED LOGIC) ──
 function positionBubble(){
-const r = cleoEl.getBoundingClientRect();
-bubble.style.left = (r.right + 12) + 'px';
-bubble.style.top = (r.top + r.height/2 - 100) + 'px';
+  const r=cleoEl.getBoundingClientRect();
+  const bw=240;
+  let bx=r.right+14;
+  if(bx+bw>window.innerWidth-8) bx=r.left-bw-14; // Flip to left side if it hits viewport edge
+  let by=r.top+r.height/2-40;
+  if(by<8)by=8;
+  bubble.style.left=bx+'px';
+  bubble.style.top=by+'px';
 }
 
-// ── SHOW / HIDE (UPDATED ONLY LOGIC) ──
 let hideTimer;
 function showBubble(){
-clearTimeout(hideTimer);
-positionBubble();
-bubble.classList.add('show');
-// pick new message every hover (no repeat)
-let idx = Math.floor(Math.random() * messages.length);
-if(messages.length > 1){
-while(idx === lastIndex){
-idx = Math.floor(Math.random() * messages.length);
+  clearTimeout(hideTimer);
+  positionBubble();
+  bubble.classList.add('show');
+  let idx=Math.floor(Math.random()*messages.length);
+  if(messages.length>1){while(idx===lastIndex)idx=Math.floor(Math.random()*messages.length);}
+  lastIndex=idx;
+  buildMessage(messages[idx]);
+  setTimeout(typeNext,250);
 }
-}
-lastIndex = idx;
-buildMessage(messages[idx]);
-setTimeout(typeNext, 250);
-}
+function hideBubble(){hideTimer=setTimeout(()=>{bubble.classList.remove('show');},500);}
 
-function hideBubble(){
-hideTimer = setTimeout(()=>{
-bubble.classList.remove('show');
-}, 500);
-}
-
-// ── EVENTS (UNCHANGED) ──
-cleoEl.addEventListener('mouseenter', showBubble);
-cleoEl.addEventListener('mouseleave', hideBubble);
-bubble.addEventListener('mouseenter', ()=>clearTimeout(hideTimer));
-bubble.addEventListener('mouseleave', hideBubble);
+cleoEl.addEventListener('mouseenter',showBubble);
+cleoEl.addEventListener('mouseleave',hideBubble);
+bubble.addEventListener('mouseenter',()=>clearTimeout(hideTimer));
+bubble.addEventListener('mouseleave',hideBubble);
+})();
 </script>
 </body>
 </html>
