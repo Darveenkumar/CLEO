@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO Mascot Widget</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<title>CLEO Mascot Widget - Perfected</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-/* Reset and clear background for widget transparency */
+/* Reset and canvas transparency setup */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
   width: 100%;
@@ -18,26 +18,28 @@ html, body {
   overflow: hidden;
 }
 
-/* Side-by-side layout containing CLEO and the dynamic bubble */
+/* Base relative anchor container pinning the layout elements together */
 .widget-wrapper {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
   position: relative;
-  padding: 20px;
+  display: inline-block;
+  padding: 30px;
+  /* Accommodates static CLEO width + generous bubble expansion buffer safely */
+  min-width: 500px; 
+  min-height: 340px;
 }
 
-/* CLEO Mascot Component Base — Smooth Hover Restored */
+/* CLEO Mascot Core Layout — Absolutely locked horizontally */
 .cleo-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
   animation: robotHover 4s ease-in-out infinite;
-  position: relative;
+  position: absolute;
+  left: 30px;
+  top: 30px;
   z-index: 10;
-  flex-shrink: 0;
+  width: 130px; /* Fixed, predictable footprint */
 }
 
 @keyframes robotHover {
@@ -46,23 +48,25 @@ html, body {
 }
 
 .cleo-svg-wrap {
-  filter: drop-shadow(0 12px 32px rgba(0, 180, 255, 0.32));
-  width: 125px;
+  filter: drop-shadow(0 12px 32px rgba(0, 180, 255, 0.35));
+  width: 100%;
 }
 
-/* Target Left Arm (Viewer's Left Side) for the 10s Waving Interval */
+/* Fluid Left Arm (Viewer's Left) — Shoulder joint anchor inside safe view limits */
 .left-arm-group {
-  transform-origin: 52px 180px; /* Pivots directly at the shoulder joint */
+  transform-origin: 52px 176px; 
 }
 
 .left-arm-group.wave-active {
-  animation: armWave 1.8s ease-in-out;
+  animation: naturalArmWave 1.6s ease-in-out;
 }
 
-@keyframes armWave {
-  0%, 100% { transform: rotate(0deg); }
-  20%, 60% { transform: rotate(28deg) translateY(-2px); }
-  40%, 80% { transform: rotate(8deg) translateY(1px); }
+@keyframes naturalArmWave {
+  0%, 100% { transform: rotate(0deg) translate(0px, 0px); }
+  20% { transform: rotate(18deg) translate(-2px, -3px); }
+  40% { transform: rotate(4deg) translate(-1px, -1px); }
+  60% { transform: rotate(16deg) translate(-2px, -3px); }
+  80% { transform: rotate(6deg) translate(-1px, -1px); }
 }
 
 .cleo-name {
@@ -70,7 +74,7 @@ html, body {
   letter-spacing: .16em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.4);
-  margin-top: 4px;
+  margin-top: 6px;
 }
 .cleo-name span {
   font-family: 'Syne', sans-serif;
@@ -80,50 +84,54 @@ html, body {
   color: #00dcff;
 }
 
-/* Cybernetic Robot-Styled Dynamic Chat Bubble */
+/* Absolute Pinned Cyber Bubble — Pushes strictly to the right without impacting CLEO */
 .chat-bubble {
-  background: rgba(6, 12, 26, 0.9);
+  position: absolute;
+  left: 172px; /* Fixed distance past CLEO's boundary + margin gap */
+  top: 75px;   /* Level with the glass visor interface line */
+  
+  background: rgba(6, 12, 26, 0.94);
   border: 1.5px solid #00dcff;
   border-radius: 4px;
-  padding: 10px 14px;
-  box-shadow: 0 0 15px rgba(0, 220, 255, 0.25), inset 0 0 8px rgba(0, 220, 255, 0.1);
+  padding: 12px 16px;
+  box-shadow: 0 0 18px rgba(0, 220, 255, 0.25), inset 0 0 10px rgba(0, 220, 255, 0.15);
   
-  /* Layout constraints - expands and contracts following text length */
+  /* Sizing matrix - safely maps variable line lengths to the right */
   display: flex;
   align-items: center;
-  min-width: 40px;
-  max-width: 260px;
-  height: auto;
-  min-height: 54px;
+  width: max-content;
+  min-width: 60px;
+  max-width: 310px;
+  min-height: 58px;
+  z-index: 5;
   
-  /* Typography setup */
+  /* Typography metrics */
   font-family: 'Share Tech Mono', monospace;
   font-size: 12.5px;
-  line-height: 1.35;
+  line-height: 1.4;
   color: #c1f7ff;
   text-shadow: 0 0 4px rgba(0, 220, 255, 0.5);
   
-  /* Visibility Matrix — Grows on hover from the left edge anchor */
+  /* Growth Scaling Mechanics */
   opacity: 0;
-  transform: translateX(-4px) scaleX(0.9);
-  transform-origin: left center;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transform: scaleX(0.82);
+  transform-origin: left center; /* Forces transformation expansion vector rightward */
+  transition: opacity 0.22s ease, transform 0.26s cubic-bezier(0.175, 0.885, 0.32, 1.1);
   pointer-events: none;
-  position: relative;
 }
 
-/* Displays bubble perfectly on right side hover layout */
+/* Hover detection targeting wrapper component triggers expansion */
 .widget-wrapper:hover .chat-bubble {
   opacity: 1;
-  transform: translateX(0) scaleX(1);
+  transform: scaleX(1);
 }
 
-/* Tech Angular Arrow Pointer */
+/* Tech Pointer Triangle */
 .chat-bubble::before {
   content: '';
   position: absolute;
   left: -7px;
-  top: 20px;
+  top: 22px;
   width: 10px;
   height: 10px;
   background: #060c1a;
@@ -167,11 +175,6 @@ html, body {
             <stop offset="50%" stop-color="#093058"/>
             <stop offset="100%" stop-color="#03102a"/>
           </radialGradient>
-          <radialGradient id="eG" cx="38%" cy="32%" r="62%">
-            <stop offset="0%" stop-color="#e8fffd"/>
-            <stop offset="45%" stop-color="#62f0ff"/>
-            <stop offset="100%" stop-color="#00b6dc"/>
-          </radialGradient>
           <radialGradient id="ckG" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stop-color="rgba(255,150,170,.75)"/>
             <stop offset="100%" stop-color="rgba(255,150,170,0)"/>
@@ -207,18 +210,12 @@ html, body {
 
         <path d="M55 168 Q50 232 52 268 L168 268 Q170 232 165 168 Q148 154 110 152 Q72 154 55 168Z" fill="url(#bG)" filter="url(#sh)"/>
         <path d="M72 158 Q110 150 148 158 Q142 172 110 174 Q78 172 72 158Z" fill="url(#glG)" opacity=".5"/>
-        <path d="M64 182 Q110 174 156 182" stroke="rgba(160,240,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round">
-          <animate attributeName="opacity" values=".4;.8;.4" dur="2.2s" repeatCount="indefinite"/>
-        </path>
+        <path d="M64 182 Q110 174 156 182" stroke="rgba(160,240,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        
         <circle cx="84" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        <circle cx="84" cy="210" r="9" fill="url(#glG)" opacity=".4"/>
         <circle cx="110" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        <circle cx="110" cy="210" r="9" fill="url(#glG)" opacity=".4"/>
         <circle cx="136" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        <circle cx="136" cy="210" r="9" fill="url(#glG)" opacity=".4"/>
-        <circle cx="81" cy="207" r="3" fill="rgba(255,255,255,.6)"/>
-        <circle cx="107" cy="207" r="3" fill="rgba(255,255,255,.6)"/>
-        <circle cx="133" cy="207" r="3" fill="rgba(255,255,255,.6)"/>
+        
         <rect x="82" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.25)" stroke="rgba(0,220,255,.5)" stroke-width="1"/>
         <text x="110" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
 
@@ -233,27 +230,19 @@ html, body {
         <ellipse cx="186" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
 
         <ellipse cx="110" cy="153" rx="24" ry="6" fill="url(#gG)" filter="url(#sh2)"/>
-        <ellipse cx="110" cy="151" rx="20" ry="4" fill="url(#glG)" opacity=".5"/>
-
         <rect x="94" y="134" width="32" height="22" rx="11" fill="url(#bG)" filter="url(#sh2)"/>
 
         <ellipse cx="110" cy="80" rx="71" ry="67" fill="url(#hG)" filter="url(#sh)"/>
         <ellipse cx="88" cy="44" rx="40" ry="18" fill="url(#glG)" opacity=".42" transform="rotate(-10 88 44)"/>
 
         <ellipse cx="39" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
-        <ellipse cx="38" cy="82" rx="7" ry="8" fill="rgba(255,210,210,.45)"/>
         <ellipse cx="181" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
-        <ellipse cx="180" cy="82" rx="7" ry="8" fill="rgba(255,210,210,.45)"/>
 
         <rect x="48" y="54" width="124" height="62" rx="28" fill="url(#vG)"/>
         <rect x="48" y="54" width="124" height="62" rx="28" fill="none" stroke="rgba(120,210,255,.45)" stroke-width="1.5"/>
 
-        <ellipse cx="66" cy="103" rx="9" ry="5.5" fill="url(#ckG)">
-          <animate attributeName="opacity" values=".6;.95;.6" dur="3s" repeatCount="indefinite"/>
-        </ellipse>
-        <ellipse cx="154" cy="103" rx="9" ry="5.5" fill="url(#ckG)">
-          <animate attributeName="opacity" values=".6;.95;.6" dur="3s" repeatCount="indefinite"/>
-        </ellipse>
+        <ellipse cx="66" cy="103" rx="9" ry="5.5" fill="url(#ckG)"/>
+        <ellipse cx="154" cy="103" rx="9" ry="5.5" fill="url(#ckG)"/>
 
         <ellipse cx="84" cy="86" rx="15" ry="14" fill="white"/>
         <circle cx="84" cy="86" r="10" fill="#1a1008"/>
@@ -318,32 +307,19 @@ function blink() {
       const tl = document.getElementById(e.top);
       const bl = document.getElementById(e.bot);
       if(!tl||!bl) return;
-      tl.setAttribute('rx', 15);
-      tl.setAttribute('ry', ry);
-      tl.setAttribute('cx', e.cx);
-      tl.setAttribute('cy', e.eyeTop + ry);
-      
-      bl.setAttribute('rx', 15);
-      bl.setAttribute('ry', ry * 0.6);
-      bl.setAttribute('cx', e.cx);
-      bl.setAttribute('cy', e.eyeBot - ry * 0.6);
+      tl.setAttribute('rx', 15); tl.setAttribute('ry', ry); tl.setAttribute('cx', e.cx); tl.setAttribute('cy', e.eyeTop + ry);
+      bl.setAttribute('rx', 15); bl.setAttribute('ry', ry * 0.6); bl.setAttribute('cx', e.cx); bl.setAttribute('cy', e.eyeBot - ry * 0.6);
     });
   }
 
   const ci = setInterval(() => {
-    f++;
-    setLids(easeIn(f / closeSteps));
+    f++; setLids(easeIn(f / closeSteps));
     if (f >= closeSteps) {
       clearInterval(ci); f = 0;
       setTimeout(() => {
         const oi = setInterval(() => {
-          f++;
-          setLids(easeOut(1 - f / openSteps));
-          if (f >= openSteps) {
-            clearInterval(oi);
-            setLids(0);
-            setTimeout(blink, 2800 + Math.random() * 3500);
-          }
+          f++; setLids(easeOut(1 - f / openSteps));
+          if (f >= openSteps) { clearInterval(oi); setLids(0); setTimeout(blink, 2800 + Math.random() * 3500); }
         }, openDur / openSteps);
       }, 45);
     }
@@ -351,21 +327,16 @@ function blink() {
 }
 setTimeout(blink, 2000);
 
-// ── 10-Second Left Arm Wave Engine ──
+// ── Strict 10-Second Wave Core Trigger ──
 const leftArm = document.getElementById('leftArm');
 function triggerWave() {
   if (leftArm) {
     leftArm.classList.add('wave-active');
-    // Remove the class right after animation completes so it can be re-triggered cleanly
-    setTimeout(() => {
-      leftArm.classList.remove('wave-active');
-    }, 1850);
+    setTimeout(() => { leftArm.classList.remove('wave-active'); }, 1650);
   }
 }
-// Fire every 10 seconds (10,000ms)
 setInterval(triggerWave, 10000);
-// Optional initial delay wave
-setTimeout(triggerWave, 3000);
+setTimeout(triggerWave, 2200); // Welcoming greeting wave post startup
 
 // ── Rotational Dialogue Matrix ──
 const messages = [
@@ -394,11 +365,9 @@ function resetTyping() {
 
 function triggerTyping() {
   resetTyping();
-  
   const currentPhrase = messages[messageIndex];
   messageIndex = (messageIndex + 1) % messages.length;
-  
-  setTimeout(() => typeNext(currentPhrase), 150);
+  setTimeout(() => typeNext(currentPhrase), 120);
 }
 
 function typeNext(phrase) {
@@ -409,8 +378,7 @@ function typeNext(phrase) {
   const span = document.createElement('span');
   span.textContent = phrase[charIdx++];
   typed.insertBefore(span, cursor);
-  
-  typingTimer = setTimeout(() => typeNext(phrase), 25 + Math.random() * 20);
+  typingTimer = setTimeout(() => typeNext(phrase), 22 + Math.random() * 24);
 }
 </script>
 </body>
