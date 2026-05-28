@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO Mascot Widget - Natural Left Shoulder Wave</title>
+<title>CLEO Mascot Widget - Perfect Left Arm Movement</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 /* Base Reset */
@@ -51,26 +51,26 @@ html, body {
   width: 100%;
 }
 
-/* NATURAL LEFT SHOULDER MOVEMENT
-  - Transform origin targeted exactly at the shoulder seam intersection (56px, 154px).
-  - The rotational sweep maintains a tight track to ensure the joint never shears or breaks away from the torso.
+/* STRUCTURAL FIX: NATURAL LEFT SHOULDER WAVE
+  - Pivots perfectly from the center of the left shoulder ball-joint socket (56px, 172px).
+  - Rotates smoothly outwards into negative angles, keeping the joint completely intact against the torso.
 */
 .left-arm-group {
-  transform-origin: 56px 154px;
+  transform-origin: 56px 172px;
   transform: rotate(0deg);
-  transition: transform 0.28s cubic-bezier(0.215, 0.610, 0.355, 1);
+  transition: transform 0.25s cubic-bezier(0.215, 0.610, 0.355, 1);
 }
 
 .widget-wrapper:hover .left-arm-group {
-  animation: naturalLeftShoulderWave 1.4s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+  animation: flawlessLeftWave 1.3s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
 }
 
-@keyframes naturalLeftShoulderWave {
+@keyframes flawlessLeftWave {
   0%, 100% { transform: rotate(0deg); }
-  20% { transform: rotate(-44deg); }
-  40% { transform: rotate(-26deg); }
-  60% { transform: rotate(-48deg); }
-  80% { transform: rotate(-22deg); }
+  20% { transform: rotate(-48deg); }
+  40% { transform: rotate(-30deg); }
+  60% { transform: rotate(-54deg); }
+  80% { transform: rotate(-30deg); }
 }
 
 .cleo-name {
@@ -212,9 +212,9 @@ html, body {
         <text x="110" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
 
         <g id="leftArm" class="left-arm-group">
-          <path d="M56 168 Q32 188 32 216 Q32 238 42 242 Q54 246 60 230 Q66 212 66 184Z" fill="url(#bG)" filter="url(#sh2)"/>
-          <ellipse cx="38" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
-          <ellipse cx="40" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
+          <path d="M56 172 Q38 188 32 216 Q28 234 38 240 Q49 244 56 228 Q62 210 66 184Z" fill="url(#bG)" filter="url(#sh2)"/>
+          <circle cx="36" cy="240" r="13" fill="url(#bG)" filter="url(#sh2)"/>
+          <ellipse cx="34" cy="236" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
         </g>
 
         <path d="M163 170 Q190 188 194 220 Q196 238 186 242 Q174 246 168 230 Q162 212 152 186Z" fill="url(#bG)" filter="url(#sh2)"/>
