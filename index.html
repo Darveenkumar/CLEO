@@ -11,11 +11,11 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
 
-/* ── CLEO FLOAT ── */
 .cleo-wrap{
   width:100%;
   display:flex;
-  justify-content:center;
+  flex-direction:column;
+  align-items:center;
 }
 
 .cleo-inner{
@@ -32,15 +32,19 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
   50%{transform:translateY(-12px)}
 }
 
+.cleo-svg-wrap{
+  width:110px;
+  filter:drop-shadow(0 8px 20px rgba(0,180,255,.35));
+}
+
 .cleo-name{
   font-family:'Syne',sans-serif;
   font-size:13px;
   letter-spacing:.1em;
   color:#00dcff;
-  margin-top:6px;
 }
 
-/* ── SOFT SPEECH BUBBLE ── */
+/* ── BUBBLE ── */
 .chat-bubble{
   position:fixed;
   max-width:240px;
@@ -63,7 +67,7 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
   transform:translateY(0) scale(1);
 }
 
-/* tail (default left) */
+/* tail */
 .chat-bubble::after{
   content:'';
   position:absolute;
@@ -74,7 +78,6 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
   border-right-color:rgba(10,20,40,.95);
 }
 
-/* tail right (when flipped) */
 .chat-bubble.right::after{
   left:auto;
   right:-6px;
@@ -82,7 +85,7 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
   border-left-color:rgba(10,20,40,.95);
 }
 
-/* typing */
+/* typing cursor */
 .cursor{
   display:inline-block;
   width:6px;
@@ -107,40 +110,68 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
     <span id="typedText"></span><span class="cursor" id="cursor"></span>
   </div>
 
-  <!-- CLEO -->
+  <!-- CLEO (UNCHANGED — PASTE YOUR ORIGINAL SVG HERE) -->
   <div class="cleo-inner" id="cleoInner">
 
-    <div style="width:110px;">
-      <!-- (your SVG unchanged) -->
-      <svg viewBox="0 0 220 280" width="100%">
-        <circle cx="110" cy="140" r="80" fill="#90c8e8"/>
-      </svg>
+    <div class="cleo-svg-wrap">
+      <!-- YOUR ORIGINAL CLEO SVG GOES HERE (UNCHANGED) -->
     </div>
 
     <div class="cleo-name">CLEO</div>
-
   </div>
 </div>
 
 <script>
-// ── TYPING TEXT ──
-const text = "Hi there 👋 I'm CLEO, your compliance assistant.";
-let i = 0;
 
-function type(){
-  if(i < text.length){
-    document.getElementById("typedText").innerHTML += text.charAt(i);
-    i++;
-    setTimeout(type, 30 + Math.random()*30);
-  } else {
-    document.getElementById("cursor").style.display = "none";
-  }
-}
+/* ── MESSAGES ── */
+const messages = [
+  "Hi there 👋 I’m CLEO.",
+  "Need help with anything?",
+  "I’m here if you’re exploring something.",
+  "Hello again ✨",
+  "What are we working on today?",
+  "I’ve got you covered.",
+  "Ask me anything."
+];
 
-// ── POSITIONING ──
+let lastMessageIndex = -1;
+
+/* ── ELEMENTS ── */
 const bubble = document.getElementById('chatBubble');
 const cleo = document.getElementById('cleoInner');
+const typed = document.getElementById('typedText');
+const cursor = document.getElementById('cursor');
 
+/* ── TYPING ENGINE ── */
+let segMap = [];
+let i = 0;
+let typingTimer;
+
+function buildMessage(text){
+  segMap = [...text];
+  i = 0;
+  typed.innerHTML = "";
+  typed.appendChild(cursor);
+  cursor.style.display = "inline-block";
+}
+
+function typeNext(){
+  if(i >= segMap.length){
+    cursor.style.display = "none";
+    return;
+  }
+
+  const ch = segMap[i++];
+
+  const span = document.createElement("span");
+  span.textContent = ch;
+
+  typed.insertBefore(span, cursor);
+
+  typingTimer = setTimeout(typeNext, 25 + Math.random()*25);
+}
+
+/* ── POSITIONING ── */
 function positionBubble(){
   const r = cleo.getBoundingClientRect();
   const bw = 240;
@@ -159,19 +190,27 @@ function positionBubble(){
   bubble.style.top = (r.top + r.height/2 - 60) + 'px';
 }
 
-// ── SHOW / HIDE ──
-let started = false;
+/* ── SHOW / HIDE ── */
 let hideTimer;
 
 function show(){
   clearTimeout(hideTimer);
+
   positionBubble();
   bubble.classList.add("show");
 
-  if(!started){
-    started = true;
-    setTimeout(type, 300);
-  }
+  // pick new message (no repeat)
+  let idx;
+  do {
+    idx = Math.floor(Math.random() * messages.length);
+  } while(idx === lastMessageIndex && messages.length > 1);
+
+  lastMessageIndex = idx;
+
+  buildMessage(messages[idx]);
+
+  clearTimeout(typingTimer);
+  setTimeout(typeNext, 250);
 }
 
 function hide(){
@@ -180,18 +219,19 @@ function hide(){
   }, 400);
 }
 
-// ── INTERACTION ──
+/* ── EVENTS ── */
 cleo.addEventListener("mouseenter", show);
 cleo.addEventListener("mouseleave", hide);
 bubble.addEventListener("mouseenter", ()=>clearTimeout(hideTimer));
 bubble.addEventListener("mouseleave", hide);
 
-// ── SUBTLE FLOAT REACTION ──
-cleo.addEventListener('mousemove', (e) => {
-  const x = (e.clientX - window.innerWidth/2) * 0.01;
-  const y = (e.clientY - window.innerHeight/2) * 0.01;
-  bubble.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+/* ── SUBTLE FOLLOW MOTION ── */
+cleo.addEventListener('mousemove',(e)=>{
+  const x=(e.clientX-window.innerWidth/2)*0.01;
+  const y=(e.clientY-window.innerHeight/2)*0.01;
+  bubble.style.transform=`translate(${x}px,${y}px) scale(1)`;
 });
+
 </script>
 
 </body>
