@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO Mascot Widget - Styled Typography</title>
+<title>CLEO Mascot Widget - Natural Connected Wave</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 /* Reset and canvas architecture transparency */
@@ -27,7 +27,7 @@ html, body {
   min-height: 360px;
 }
 
-/* CLEO Mascot Component Anchor — Strictly isolated horizontally */
+/* CLEO Mascot Component Anchor */
 .cleo-container {
   display: flex;
   flex-direction: column;
@@ -51,24 +51,48 @@ html, body {
   width: 100%;
 }
 
-/* NATURAL HIGH WAVE ENGINE */
+/* 
+  NATURAL ANCHORED LEFT WAVE ENGINE
+  Pivot point fixed directly to shoulder coordinates (28px, 180px).
+  Rotates outward cleanly into the left margin without detaching from body frame.
+*/
 .left-arm-group {
-  transform-origin: 56px 176px;
-  transform: rotate(0deg) translate(0px, 0px);
+  transform-origin: 28px 180px;
+  transform: rotate(0deg);
 }
 
 .left-arm-group.wave-active {
-  animation: naturalHighWave 1.3s cubic-bezier(0.37, 0, 0.63, 1) forwards;
+  animation: naturalLeftWave 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
-@keyframes naturalHighWave {
-  0% { transform: rotate(0deg) translate(0px, 0px); }
-  20% { transform: rotate(-115deg) translate(-28px, 46px); }
-  35% { transform: rotate(-130deg) translate(-34px, 40px); }
-  50% { transform: rotate(-105deg) translate(-24px, 50px); }
-  65% { transform: rotate(-130deg) translate(-34px, 40px); }
-  80% { transform: rotate(-110deg) translate(-26px, 48px); }
-  100% { transform: rotate(0deg) translate(0px, 0px); }
+@keyframes naturalLeftWave {
+  0% { 
+    transform: rotate(0deg); 
+  }
+  /* Raise arm up and out to the left side */
+  25% { 
+    transform: rotate(-55deg); 
+  }
+  /* Wave inward slightly */
+  40% { 
+    transform: rotate(-42deg); 
+  }
+  /* Wave outward */
+  55% { 
+    transform: rotate(-58deg); 
+  }
+  /* Wave inward */
+  70% { 
+    transform: rotate(-42deg); 
+  }
+  /* Wave outward one last time */
+  82% { 
+    transform: rotate(-55deg); 
+  }
+  /* Return smoothly back to rest position alongside chassis */
+  100% { 
+    transform: rotate(0deg); 
+  }
 }
 
 .cleo-name {
@@ -86,7 +110,7 @@ html, body {
   color: #00dcff;
 }
 
-/* Modern Glassmorphic Dialogue Panel — Grows cleanly rightward */
+/* Modern Glassmorphic Dialogue Panel */
 .chat-bubble {
   position: absolute;
   left: 176px; 
@@ -183,7 +207,7 @@ html, body {
           <radialGradient id="rG" cx="40%" cy="30%" r="65%">
             <stop offset="0%" stop-color="#ff8a98"/>
             <stop offset="100%" stop-color="#d23344"/>
-          </linearGradient>
+          </radialGradient>
           <linearGradient id="glG" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="rgba(255,255,255,.55)"/>
             <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
@@ -219,14 +243,14 @@ html, body {
         <rect x="82" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.25)" stroke="rgba(0,220,255,.5)" stroke-width="1"/>
         <text x="110" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
 
-        <!-- Safe High-Wave Arm Structure -->
+        <!-- LEFT ARM: Anchored to shoulder joint, waves outwards natively -->
         <g id="leftArm" class="left-arm-group">
           <path d="M57 170 Q30 188 26 220 Q24 238 34 242 Q46 246 52 230 Q58 212 68 186Z" fill="url(#bG)" filter="url(#sh2)"/>
           <ellipse cx="32" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
           <ellipse cx="30" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
         </g>
 
-        <!-- Right Arm Layer -->
+        <!-- RIGHT ARM: Static anchor balance -->
         <path d="M163 170 Q190 188 194 220 Q196 238 186 242 Q174 246 168 230 Q162 212 152 186Z" fill="url(#bG)" filter="url(#sh2)"/>
         <ellipse cx="188" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
         <ellipse cx="186" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
@@ -334,7 +358,7 @@ function blink() {
 }
 setTimeout(blink, 2000);
 
-// ── Say-Hi Wave Controller ──
+// ── Fixed Say-Hi Wave Dynamic Trigger ──
 const leftArm = document.getElementById('leftArm');
 function executeEnthusiasticWave() {
   if (leftArm) {
