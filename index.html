@@ -3,315 +3,286 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO Mascot Widget - Natural Connected Wave</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<title>CORE Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-/* Reset and canvas architecture transparency */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-  width: 100%;
-  height: 100%;
-  background: transparent !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100vh;
+  background:
+    radial-gradient(130% 52% at 50% -10%, rgba(0,190,255,.16) 0%, rgba(0,150,255,.05) 40%, rgba(0,150,255,0) 72%),
+    transparent;
+  font-family:'Inter',sans-serif;overflow:hidden}
+canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.3}
+
+.page{
+  position:relative;z-index:10;
+  width:100%;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;
+  padding:0 clamp(24px,5vw,72px) clamp(16px,3vw,44px);
+  padding-top:0;
 }
 
-/* Core Layout Container Context */
-.widget-wrapper {
-  position: relative;
-  display: inline-block;
-  padding: 40px;
-  min-width: 540px; 
-  min-height: 360px;
-}
+/* icon layer — behind everything */
+#icon-layer{position:fixed;inset:0;pointer-events:none;z-index:11;}
+.ficon{position:absolute;display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:none;border:none;}
+.ficon svg{width:22px;height:22px;}
 
-/* CLEO Mascot Component Anchor */
-.cleo-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  animation: robotHover 4.5s ease-in-out infinite;
-  position: absolute;
-  left: 40px;
-  top: 40px;
-  z-index: 10;
-  width: 130px; 
+/* CLEO — frontmost */
+.cleo-wrap{
+  display:flex;justify-content:center;
+  padding-top:clamp(16px,2vh,24px);
+  position:relative;
+  z-index:9999;
+  width:100%;
+  margin-bottom:-10px;
 }
-
-@keyframes robotHover {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-7px); }
+.cleo-area{
+  display:flex;justify-content:center;
+  will-change:transform;
+  position:relative;
+  z-index:9999;
 }
-
-.cleo-svg-wrap {
-  filter: drop-shadow(0 16px 36px rgba(0, 180, 255, 0.3));
-  width: 100%;
+.cleo-inner{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  animation:hoverfloat 4s 1s ease-in-out infinite;
+  position:relative;
+  z-index:9999;
+  cursor:pointer;
 }
+@keyframes hoverfloat{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  28%{transform:translateY(-12px) rotate(-1.2deg)}
+  55%{transform:translateY(-18px) rotate(.8deg)}
+  78%{transform:translateY(-8px) rotate(-.6deg)}
+}
+.cleo-svg-wrap{
+  filter:drop-shadow(0 12px 32px rgba(0,180,255,.32));
+  width:clamp(88px,9vw,125px);
+}
+.cleo-name{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.22);display:flex;flex-direction:column;align-items:center;gap:2px;}
+.cleo-name span{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(11px,1vw,14px);letter-spacing:.1em;color:#00dcff;}
 
-/* 
-  NATURAL ANCHORED LEFT WAVE ENGINE
-  Pivot point fixed directly to shoulder coordinates (28px, 180px).
-  Rotates outward cleanly into the left margin without detaching from body frame.
+/* STRUCTURAL FIX: Natural Shoulder Rotation Anchor Engine
+  Hinges beautifully outwards to the left space without detaching.
 */
-.left-arm-group {
-  transform-origin: 28px 180px;
+.left-arm-wave-group {
+  transform-origin: 56px 172px;
   transform: rotate(0deg);
+  transition: transform 0.25s cubic-bezier(0.215, 0.610, 0.355, 1);
 }
 
-.left-arm-group.wave-active {
-  animation: naturalLeftWave 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+.cleo-inner:hover .left-arm-wave-group {
+  animation: naturalOutwardWave 1.3s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
 }
 
-@keyframes naturalLeftWave {
-  0% { 
-    transform: rotate(0deg); 
-  }
-  /* Raise arm up and out to the left side */
-  25% { 
-    transform: rotate(-55deg); 
-  }
-  /* Wave inward slightly */
-  40% { 
-    transform: rotate(-42deg); 
-  }
-  /* Wave outward */
-  55% { 
-    transform: rotate(-58deg); 
-  }
-  /* Wave inward */
-  70% { 
-    transform: rotate(-42deg); 
-  }
-  /* Wave outward one last time */
-  82% { 
-    transform: rotate(-55deg); 
-  }
-  /* Return smoothly back to rest position alongside chassis */
-  100% { 
-    transform: rotate(0deg); 
-  }
+@keyframes naturalOutwardWave {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-50deg); }
+  40% { transform: rotate(-32deg); }
+  60% { transform: rotate(-55deg); }
+  80% { transform: rotate(-32deg); }
 }
 
-.cleo-name {
-  font-size: 10px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin-top: 8px;
+/* wordmark — always centred */
+.wordmark-section{
+  position:relative;
+  animation:fadeUp .8s .2s both;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
 }
-.cleo-name span {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: .1em;
-  color: #00dcff;
-}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 
-/* Modern Glassmorphic Dialogue Panel */
-.chat-bubble {
-  position: absolute;
-  left: 176px; 
-  top: 80px;   
-  
-  background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(16px) saturate(120%);
-  -webkit-backdrop-filter: blur(16px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-left: 2px solid #00dcff; 
-  border-radius: 12px;
-  padding: 14px 18px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.1);
-  
-  display: flex;
-  align-items: center;
-  width: max-content;
-  min-width: 80px;
-  max-width: 320px;
-  min-height: 56px;
-  z-index: 5;
-  
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.45;
-  color: #e2f7ff;
-  letter-spacing: -0.01em;
-  
-  opacity: 0;
-  transform: scaleX(0.88) translateX(-6px);
-  transform-origin: left center;
-  transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-  pointer-events: none;
+.wordmark{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(64px,12vw,150px);
+  line-height:.88;letter-spacing:-.04em;
+  display:flex;align-items:baseline;gap:clamp(6px,.8vw,14px);
+  white-space:nowrap;
 }
+.wm-core{
+  background:linear-gradient(120deg,#00e5ff,#00b4ff,#7b8cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  background-size:200% 100%;animation:shimmer 6s linear infinite;
+}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+.wm-hub{color:rgba(255,255,255,.72);font-weight:700;}
 
-/* Highlight style specifically for C, L, E, O */
-.chat-bubble .tech-highlight {
-  color: #00dcff;
-  font-weight: 600;
-  text-shadow: 0 0 8px rgba(0, 220, 255, 0.4);
+.tagline-row{
+  margin-top:12px;
+  display:flex;align-items:baseline;justify-content:space-between;
+  animation:fadeUp .8s .4s both;
+  width:100%;
 }
-
-/* Hover wrapper boundaries triggers fluid scale out */
-.widget-wrapper:hover .chat-bubble {
-  opacity: 1;
-  transform: scaleX(1) translateX(0px);
-}
-
-#cursor {
-  display: inline-block;
-  width: 2px;
-  height: 14px;
-  background: #00dcff;
-  margin-left: 4px;
-  animation: smoothPulse 0.8s ease-in-out infinite;
-  vertical-align: middle;
-}
-@keyframes smoothPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+.tag-left{font-size:clamp(11px,1.1vw,14px);color:rgba(255,255,255,.55);font-weight:300;letter-spacing:.04em;white-space:nowrap;margin-left:8px;}
+.tag-left strong{color:rgba(0,220,255,.7);font-weight:400}
+.tag-right{font-size:clamp(11px,1.1vw,14px);color:rgba(255,255,255,.55);font-weight:300;letter-spacing:.04em;white-space:nowrap;}
 </style>
 </head>
 <body>
+<canvas id="c"></canvas>
+<div id="icon-layer"></div>
 
-<div class="widget-wrapper" id="cleoWidget">
-  
-  <!-- Mascot UI Component Layer -->
-  <div class="cleo-container">
-    <div class="cleo-svg-wrap">
-      <svg viewBox="0 0 220 280" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%">
-        <defs>
-          <radialGradient id="bG" cx="38%" cy="28%" r="68%">
-            <stop offset="0%" stop-color="#f2fbff"/>
-            <stop offset="50%" stop-color="#cfeaf8"/>
-            <stop offset="100%" stop-color="#8fc6e6"/>
-          </radialGradient>
-          <radialGradient id="hG" cx="36%" cy="26%" r="68%">
-            <stop offset="0%" stop-color="#f4fcff"/>
-            <stop offset="45%" stop-color="#bce3f8"/>
-            <stop offset="100%" stop-color="#73bae2"/>
-          </radialGradient>
-          <radialGradient id="vG" gradientUnits="userSpaceOnUse" cx="92" cy="70" r="96">
-            <stop offset="0%" stop-color="#1f63a8"/>
-            <stop offset="50%" stop-color="#093058"/>
-            <stop offset="100%" stop-color="#03102a"/>
-          </radialGradient>
-          <radialGradient id="ckG" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="rgba(255,150,170,.75)"/>
-            <stop offset="100%" stop-color="rgba(255,150,170,0)"/>
-          </radialGradient>
-          <radialGradient id="gG" cx="35%" cy="28%" r="65%">
-            <stop offset="0%" stop-color="#ffe080"/>
-            <stop offset="100%" stop-color="#c87800"/>
-          </radialGradient>
-          <radialGradient id="rG" cx="40%" cy="30%" r="65%">
-            <stop offset="0%" stop-color="#ff8a98"/>
-            <stop offset="100%" stop-color="#d23344"/>
-          </radialGradient>
-          <linearGradient id="glG" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="rgba(255,255,255,.55)"/>
-            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-          </linearGradient>
-          <filter id="sh"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="rgba(0,0,0,.32)"/></filter>
-          <filter id="sh2"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,.22)"/></filter>
-          <filter id="gw"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          <clipPath id="visorClip"><rect x="48" y="54" width="124" height="62" rx="28"/></clipPath>
-        </defs>
+<div class="page">
 
-        <!-- Base system ground ring shadow -->
-        <ellipse cx="110" cy="274" rx="50" ry="7" fill="rgba(0,180,255,.16)">
-          <animate attributeName="rx" values="50;62;50" dur="4.5s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values=".16;.26;.16" dur="4.5s" repeatCount="indefinite"/>
-        </ellipse>
+  <div class="cleo-wrap">
+    <div class="cleo-area" id="cleoArea">
+      <div class="cleo-inner" id="cleoInner">
 
-        <!-- Antenna core -->
-        <line x1="110" y1="18" x2="110" y2="9" stroke="#9fd8f0" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="110" cy="7" r="4.5" fill="#00dcff" filter="url(#gw)">
-          <animate attributeName="r" values="4;5.4;4" dur="2.4s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values=".8;1;.8" dur="2.4s" repeatCount="indefinite"/>
-        </circle>
+        <div class="cleo-svg-wrap">
+          <svg viewBox="0 0 220 280" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%">
+            <defs>
+              <radialGradient id="bG" cx="38%" cy="28%" r="68%">
+                <stop offset="0%" stop-color="#f2fbff"/>
+                <stop offset="50%" stop-color="#cfeaf8"/>
+                <stop offset="100%" stop-color="#8fc6e6"/>
+              </radialGradient>
+              <radialGradient id="hG" cx="36%" cy="26%" r="68%">
+                <stop offset="0%" stop-color="#f4fcff"/>
+                <stop offset="45%" stop-color="#bce3f8"/>
+                <stop offset="100%" stop-color="#73bae2"/>
+              </radialGradient>
+              <radialGradient id="vG" gradientUnits="userSpaceOnUse" cx="92" cy="70" r="96">
+                <stop offset="0%" stop-color="#1f63a8"/>
+                <stop offset="50%" stop-color="#093058"/>
+                <stop offset="100%" stop-color="#03102a"/>
+              </radialGradient>
+              <radialGradient id="eG" cx="38%" cy="32%" r="62%">
+                <stop offset="0%" stop-color="#e8fffd"/>
+                <stop offset="45%" stop-color="#62f0ff"/>
+                <stop offset="100%" stop-color="#00b6dc"/>
+              </radialGradient>
+              <radialGradient id="ckG" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(255,150,170,.75)"/>
+                <stop offset="100%" stop-color="rgba(255,150,170,0)"/>
+              </radialGradient>
+              <radialGradient id="gG" cx="35%" cy="28%" r="65%">
+                <stop offset="0%" stop-color="#ffe080"/>
+                <stop offset="100%" stop-color="#c87800"/>
+              </radialGradient>
+              <radialGradient id="rG" cx="40%" cy="30%" r="65%">
+                <stop offset="0%" stop-color="#ff8a98"/>
+                <stop offset="100%" stop-color="#d23344"/>
+              </radialGradient>
+              <linearGradient id="glG" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(255,255,255,.55)"/>
+                <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+              </linearGradient>
+              <filter id="sh"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="rgba(0,0,0,.32)"/></filter>
+              <filter id="sh2"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,.22)"/></filter>
+              <filter id="gw"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <clipPath id="visorClip"><rect x="48" y="54" width="124" height="62" rx="28"/></clipPath>
+            </defs>
 
-        <!-- Torso Chassis -->
-        <path d="M55 168 Q50 232 52 268 L168 268 Q170 232 165 168 Q148 154 110 152 Q72 154 55 168Z" fill="url(#bG)" filter="url(#sh)"/>
-        <path d="M72 158 Q110 150 148 158 Q142 172 110 174 Q78 172 72 158Z" fill="url(#glG)" opacity=".5"/>
-        <path d="M64 182 Q110 174 156 182" stroke="rgba(160,240,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        
-        <circle cx="84" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        <circle cx="110" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        <circle cx="136" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        
-        <rect x="82" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.25)" stroke="rgba(0,220,255,.5)" stroke-width="1"/>
-        <text x="110" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
+            <ellipse cx="110" cy="274" rx="50" ry="7" fill="rgba(0,180,255,.16)">
+              <animate attributeName="rx" values="50;62;50" dur="4s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values=".16;.26;.16" dur="4s" repeatCount="indefinite"/>
+            </ellipse>
 
-        <!-- LEFT ARM: Anchored to shoulder joint, waves outwards natively -->
-        <g id="leftArm" class="left-arm-group">
-          <path d="M57 170 Q30 188 26 220 Q24 238 34 242 Q46 246 52 230 Q58 212 68 186Z" fill="url(#bG)" filter="url(#sh2)"/>
-          <ellipse cx="32" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
-          <ellipse cx="30" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
-        </g>
+            <line x1="110" y1="18" x2="110" y2="9" stroke="#9fd8f0" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="110" cy="7" r="4.5" fill="#00dcff" filter="url(#gw)">
+              <animate attributeName="r" values="4;5.4;4" dur="2.4s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values=".8;1;.8" dur="2.4s" repeatCount="indefinite"/>
+            </circle>
 
-        <!-- RIGHT ARM: Static anchor balance -->
-        <path d="M163 170 Q190 188 194 220 Q196 238 186 242 Q174 246 168 230 Q162 212 152 186Z" fill="url(#bG)" filter="url(#sh2)"/>
-        <ellipse cx="188" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
-        <ellipse cx="186" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
+            <path d="M55 168 Q50 232 52 268 L168 268 Q170 232 165 168 Q148 154 110 152 Q72 154 55 168Z" fill="url(#bG)" filter="url(#sh)"/>
+            <path d="M72 158 Q110 150 148 158 Q142 172 110 174 Q78 172 72 158Z" fill="url(#glG)" opacity=".5"/>
+            <path d="M64 182 Q110 174 156 182" stroke="rgba(160,240,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round">
+              <animate attributeName="opacity" values=".4;.8;.4" dur="2.2s" repeatCount="indefinite"/>
+            </path>
+            
+            <circle cx="84" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+            <circle cx="84" cy="210" r="9" fill="url(#glG)" opacity=".4"/>
+            <circle cx="110" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+            <circle cx="110" cy="210" r="9" fill="url(#glG)" opacity=".4"/>
+            <circle cx="136" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+            <circle cx="136" cy="210" r="9" fill="url(#glG)" opacity=".4"/>
+            <circle cx="81" cy="207" r="3" fill="rgba(255,255,255,.6)"/>
+            <circle cx="107" cy="207" r="3" fill="rgba(255,255,255,.6)"/>
+            <circle cx="133" cy="207" r="3" fill="rgba(255,255,255,.6)"/>
+            
+            <rect x="82" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.25)" stroke="rgba(0,220,255,.5)" stroke-width="1"/>
+            <text x="110" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
 
-        <ellipse cx="110" cy="153" rx="24" ry="6" fill="url(#gG)" filter="url(#sh2)"/>
-        <rect x="94" y="134" width="32" height="22" rx="11" fill="url(#bG)" filter="url(#sh2)"/>
+            <g class="left-arm-wave-group" id="leftArmGroup">
+              <path d="M56 172 Q38 188 32 216 Q28 234 38 240 Q49 244 56 228 Q62 210 66 184Z" fill="url(#bG)" filter="url(#sh2)"/>
+              <circle cx="36" cy="240" r="13" fill="url(#bG)" filter="url(#sh2)"/>
+              <ellipse cx="34" cy="236" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
+            </g>
 
-        <!-- Head Helmet System Frame -->
-        <ellipse cx="110" cy="80" rx="71" ry="67" fill="url(#hG)" filter="url(#sh)"/>
-        <ellipse cx="88" cy="44" rx="40" ry="18" fill="url(#glG)" opacity=".42" transform="rotate(-10 88 44)"/>
+            <path d="M163 170 Q190 188 194 220 Q196 238 186 242 Q174 246 168 230 Q162 212 152 186Z" fill="url(#bG)" filter="url(#sh2)"/>
+            <ellipse cx="188" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
+            <ellipse cx="186" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
 
-        <ellipse cx="39" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
-        <ellipse cx="181" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
+            <ellipse cx="110" cy="153" rx="24" ry="6" fill="url(#gG)" filter="url(#sh2)"/>
+            <ellipse cx="110" cy="151" rx="20" ry="4" fill="url(#glG)" opacity=".5"/>
 
-        <rect x="48" y="54" width="124" height="62" rx="28" fill="url(#vG)"/>
-        <rect x="48" y="54" width="124" height="62" rx="28" fill="none" stroke="rgba(120,210,255,.45)" stroke-width="1.5"/>
+            <rect x="94" y="134" width="32" height="22" rx="11" fill="url(#bG)" filter="url(#sh2)"/>
 
-        <ellipse cx="66" cy="103" rx="9" ry="5.5" fill="url(#ckG)"/>
-        <ellipse cx="154" cy="103" rx="9" ry="5.5" fill="url(#ckG)"/>
+            <ellipse cx="110" cy="80" rx="71" ry="67" fill="url(#hG)" filter="url(#sh)"/>
+            <ellipse cx="88" cy="44" rx="40" ry="18" fill="url(#glG)" opacity=".42" transform="rotate(-10 88 44)"/>
 
-        <!-- Eyes -->
-        <ellipse cx="84" cy="86" rx="15" ry="14" fill="white"/>
-        <circle cx="84" cy="86" r="10" fill="#1a1008"/>
-        <circle cx="84" cy="86" r="8.5" fill="#2d1f08"/>
-        <circle cx="84" cy="86" r="6" fill="#050200"/>
-        <circle cx="87.5" cy="82" r="2.8" fill="rgba(255,255,255,.9)"/>
-        <circle cx="81" cy="90" r="1.4" fill="rgba(255,255,255,.35)"/>
-        <ellipse cx="84" cy="74" rx="15" ry="6" fill="rgba(0,0,0,.15)"/>
+            <ellipse cx="39" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
+            <ellipse cx="38" cy="82" rx="7" ry="8" fill="rgba(255,210,210,.45)"/>
+            <ellipse cx="181" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
+            <ellipse cx="180" cy="82" rx="7" ry="8" fill="rgba(255,210,210,.45)"/>
 
-        <ellipse cx="136" cy="86" rx="15" ry="14" fill="white"/>
-        <circle cx="136" cy="86" r="10" fill="#1a1008"/>
-        <circle cx="136" cy="86" r="8.5" fill="#2d1f08"/>
-        <circle cx="136" cy="86" r="6" fill="#050200"/>
-        <circle cx="139.5" cy="82" r="2.8" fill="rgba(255,255,255,.9)"/>
-        <circle cx="133" cy="90" r="1.4" fill="rgba(255,255,255,.35)"/>
-        <ellipse cx="136" cy="74" rx="15" ry="6" fill="rgba(0,0,0,.15)"/>
+            <rect x="48" y="54" width="124" height="62" rx="28" fill="url(#vG)"/>
+            <rect x="48" y="54" width="124" height="62" rx="28" fill="none" stroke="rgba(120,210,255,.45)" stroke-width="1.5"/>
 
-        <path d="M100 104 Q110 112 120 104" stroke="#5ef0ff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".9"/>
+            <ellipse cx="66" cy="103" rx="9" ry="5.5" fill="url(#ckG)">
+              <animate attributeName="opacity" values=".6;.95;.6" dur="3s" repeatCount="indefinite"/>
+            </ellipse>
+            <ellipse cx="154" cy="103" rx="9" ry="5.5" fill="url(#ckG)">
+              <animate attributeName="opacity" values=".6;.95;.6" dur="3s" repeatCount="indefinite"/>
+            </ellipse>
 
-        <!-- Eyelids -->
-        <ellipse id="lidLtop" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
-        <ellipse id="lidLbot" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
-        <ellipse id="lidRtop" cx="136" cy="86" rx="15" ry="0" fill="url(#vG)"/>
-        <ellipse id="lidRbot" cx="136" cy="86" rx="15" ry="0" fill="url(#vG)"/>
+            <ellipse cx="84" cy="86" rx="15" ry="14" fill="white"/>
+            <circle cx="84" cy="86" r="10" fill="#1a1008"/>
+            <circle cx="84" cy="86" r="8.5" fill="#2d1f08"/>
+            <circle cx="84" cy="86" r="6" fill="#050200"/>
+            <circle cx="87.5" cy="82" r="2.8" fill="rgba(255,255,255,.9)"/>
+            <circle cx="81" cy="90" r="1.4" fill="rgba(255,255,255,.35)"/>
+            <ellipse cx="84" cy="74" rx="15" ry="6" fill="rgba(0,0,0,.15)"/>
 
-        <g clip-path="url(#visorClip)">
-          <ellipse cx="86" cy="64" rx="30" ry="10" fill="rgba(255,255,255,.16)" transform="rotate(-6 86 64)"/>
-        </g>
+            <ellipse cx="136" cy="86" rx="15" ry="14" fill="white"/>
+            <circle cx="136" cy="86" r="10" fill="#1a1008"/>
+            <circle cx="136" cy="86" r="8.5" fill="#2d1f08"/>
+            <circle cx="136" cy="86" r="6" fill="#050200"/>
+            <circle cx="139.5" cy="82" r="2.8" fill="rgba(255,255,255,.9)"/>
+            <circle cx="133" cy="90" r="1.4" fill="rgba(255,255,255,.35)"/>
+            <ellipse cx="136" cy="74" rx="15" ry="6" fill="rgba(0,0,0,.15)"/>
 
-        <!-- Orbit Background Ring -->
-        <circle cx="110" cy="200" r="68" stroke="rgba(0,200,255,.07)" stroke-width="1.5" stroke-dasharray="4 9" fill="none">
-          <animateTransform attributeName="transform" type="rotate" from="0 110 200" to="360 110 200" dur="18s" repeatCount="indefinite"/>
-        </circle>
-      </svg>
+            <path d="M100 104 Q110 112 120 104" stroke="#5ef0ff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".9"/>
+
+            <ellipse id="lidLtop" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
+            <ellipse id="lidLbot" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
+            <ellipse id="lidRtop" cx="136" cy="86" rx="15" ry="0" fill="url(#vG)"/>
+            <ellipse id="lidRbot" cx="136" cy="86" rx="15" ry="0" fill="url(#vG)"/>
+
+            <g clip-path="url(#visorClip)">
+              <ellipse cx="86" cy="64" rx="30" ry="10" fill="rgba(255,255,255,.16)" transform="rotate(-6 86 64)"/>
+            </g>
+
+            <circle cx="110" cy="200" r="68" stroke="rgba(0,200,255,.07)" stroke-width="1.5" stroke-dasharray="4 9" fill="none">
+              <animateTransform attributeName="transform" type="rotate" from="0 110 200" to="360 110 200" dur="18s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+        <div class="cleo-name"><span>CLEO</span></div>
+      </div>
     </div>
-    <div class="cleo-name"><span>CLEO</span></div>
   </div>
 
-  <!-- Dialogue Bubble -->
-  <div class="chat-bubble" id="chatBubble">
-    <span id="typedText"><span id="cursor"></span></span>
+  <div class="wordmark-section" id="wmSection">
+    <div class="wordmark">
+      <span class="wm-core">CORE</span><span class="wm-hub">HUB</span>
+    </div>
+    <div class="tagline-row">
+      <span class="tag-left"><strong>CO</strong>mpliance &nbsp;·&nbsp; <strong>RE</strong>newal &nbsp;·&nbsp; Hub</span>
+      <span class="tag-right">Contracts &nbsp;·&nbsp; Licences &nbsp;·&nbsp; Direct Purchases</span>
+    </div>
   </div>
 
 </div>
@@ -326,7 +297,7 @@ function blink() {
 
   const eyes = [
     { top:'lidLtop', bot:'lidLbot', cx:84,  eyeTop:72, eyeBot:100 },
-    { top:'lidRtop', bot:'lidRbot', cx:136, eyeTop:72, eyeBot:100 },
+    { top:'lidRtop', bot:'lidRbot', cx:136, eyeTop:72, eyeBot:100 }
   ];
 
   function easeIn(t){ return t*t*t; }
@@ -338,19 +309,31 @@ function blink() {
       const tl = document.getElementById(e.top);
       const bl = document.getElementById(e.bot);
       if(!tl||!bl) return;
-      tl.setAttribute('rx', 15); tl.setAttribute('ry', ry); tl.setAttribute('cx', e.cx); tl.setAttribute('cy', e.eyeTop + ry);
-      bl.setAttribute('rx', 15); bl.setAttribute('ry', ry * 0.6); bl.setAttribute('cx', e.cx); bl.setAttribute('cy', e.eyeBot - ry * 0.6);
+      tl.setAttribute('rx', 15);
+      tl.setAttribute('ry', ry);
+      tl.setAttribute('cx', e.cx);
+      tl.setAttribute('cy', e.eyeTop + ry);
+      bl.setAttribute('rx', 15);
+      bl.setAttribute('ry', ry * 0.6);
+      bl.setAttribute('cx', e.cx);
+      bl.setAttribute('cy', e.eyeBot - ry * 0.6);
     });
   }
 
   const ci = setInterval(() => {
-    f++; setLids(easeIn(f / closeSteps));
+    f++;
+    setLids(easeIn(f / closeSteps));
     if (f >= closeSteps) {
       clearInterval(ci); f = 0;
       setTimeout(() => {
         const oi = setInterval(() => {
-          f++; setLids(easeOut(1 - f / openSteps));
-          if (f >= openSteps) { clearInterval(oi); setLids(0); setTimeout(blink, 2800 + Math.random() * 3500); }
+          f++;
+          setLids(easeOut(1 - f / openSteps));
+          if (f >= openSteps) {
+            clearInterval(oi);
+            setLids(0);
+            setTimeout(blink, 2800 + Math.random() * 3500);
+          }
         }, openDur / openSteps);
       }, 45);
     }
@@ -358,79 +341,96 @@ function blink() {
 }
 setTimeout(blink, 2000);
 
-// ── Fixed Say-Hi Wave Dynamic Trigger ──
-const leftArm = document.getElementById('leftArm');
-function executeEnthusiasticWave() {
-  if (leftArm) {
-    leftArm.classList.remove('wave-active');
-    void leftArm.offsetWidth; 
-    leftArm.classList.add('wave-active');
-  }
-}
-
-// ── Rotational Dialogue Matrix with Blue Initial Target Structuring ──
-const messages = [
-  "CLEO Here... Compliance and Lifecycle Engagement Officer.",
-  "System Diagnostics: 100% Operational. Ready to review assets.",
-  "CLEO status online. Managing compliance matrices.",
-  "Hello! Compliance and Lifecycle Engagement Officer active."
+// ── Background Floating Icons Matrix ──
+const iconDefs = [
+  {color:'#00dcff',svg:`<svg viewBox="0 0 24 24" fill="none" stroke="#00dcff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1"/></svg>`},
+  {color:'#4dffa0',svg:`<svg viewBox="0 0 24 24" fill="none" stroke="#4dffa0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`},
+  {color:'#7b8cff',svg:`<svg viewBox="0 0 24 24" fill="none" stroke="#7b8cff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`},
+  {color:'#f0c060',svg:`<svg viewBox="0 0 24 24" fill="none" stroke="#f0c060" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`},
+  {color:'#ff6b6b',svg:`<svg viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`},
+  {color:'#c084fc',svg:`<svg viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>`}
 ];
-let messageIndex = 0;
-let charIdx = 0, typingTimer = null;
 
-const widget = document.getElementById('cleoWidget');
-const typed = document.getElementById('typedText');
-const cursor = document.getElementById('cursor');
+const layer = document.getElementById('icon-layer');
+const SIZE = 32, REPEL=140, FORCE=7, FRIC=0.86, SPRING=0.055;
+let mouseX=window.innerWidth/2, mouseY=0, cleoCurrentX=0, cleoTargetX=0;
+const cleoArea=document.getElementById('cleoArea');
 
-widget.addEventListener('mouseenter', () => { 
-  executeEnthusiasticWave(); 
-  triggerTyping(); 
-});
+document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
 
-widget.addEventListener('mouseleave', () => { 
-  resetTyping(); 
-});
-
-function resetTyping() {
-  clearTimeout(typingTimer);
-  typed.innerHTML = '';
-  typed.appendChild(cursor);
-  cursor.style.display = 'inline-block';
-  charIdx = 0;
-}
-
-function triggerTyping() {
-  resetTyping();
-  const currentPhrase = messages[messageIndex];
-  messageIndex = (messageIndex + 1) % messages.length;
-  setTimeout(() => typeNext(currentPhrase), 140);
-}
-
-function typeNext(phrase) {
-  if (charIdx >= phrase.length) {
-    cursor.style.display = 'none';
-    return;
+function moveCleo() {
+  const cleoW = cleoArea.offsetWidth || 120;
+  const amp = Math.max(60, window.innerWidth / 2 - cleoW / 2 - 24);
+  const wmTop = document.getElementById('wmSection').getBoundingClientRect().top;
+  if (mouseY < wmTop) {
+    cleoTargetX = ((mouseX / window.innerWidth) * 2 - 1) * amp;
+  } else {
+    cleoTargetX = 0;
   }
-  
-  const char = phrase[charIdx];
-  const span = document.createElement('span');
-  span.textContent = char;
-  
-  // Rule-based parsing to highlight target standalone initial tokens
-  const isTargetInitial = (charIdx === 0 && char === 'C') || 
-                          (charIdx === 15 && char === 'C') || 
-                          (charIdx === 30 && char === 'L') || 
-                          (charIdx === 40 && char === 'E') || 
-                          (charIdx === 51 && char === 'O');
-
-  if (isTargetInitial) {
-    span.classList.add('tech-highlight');
-  }
-  
-  charIdx++;
-  typed.insertBefore(span, cursor);
-  typingTimer = setTimeout(() => typeNext(phrase), 20 + Math.random() * 20);
+  cleoCurrentX += (cleoTargetX - cleoCurrentX) * 0.07;
+  cleoArea.style.transform = `translateX(${cleoCurrentX}px)`;
+  requestAnimationFrame(moveCleo);
 }
+moveCleo();
+
+const fixedPos=[[0.07,10],[0.18,45],[0.30,25],[0.70,20],[0.82,45],[0.93,12]];
+let particles = [];
+
+function initParticles(){
+  layer.innerHTML=''; particles=[];
+  const wm=document.getElementById('wmSection');
+  if(!wm)return;
+  const wmR=wm.getBoundingClientRect();
+  const cleoR=document.getElementById('cleoInner').getBoundingClientRect();
+  const cleoCY=cleoR.top+cleoR.height*0.42;
+  fixedPos.forEach(([xr,yo],i)=>{
+    const ox=wmR.left+wmR.width*xr, oy=cleoCY+yo;
+    const el=document.createElement('div');
+    el.className='ficon';
+    el.innerHTML=iconDefs[i].svg;
+    el.style.left=(ox-SIZE/2)+'px';
+    el.style.top=(oy-SIZE/2)+'px';
+    el.style.opacity='0.55';
+    layer.appendChild(el);
+    particles.push({el,ox,oy,x:ox,y:oy,vx:0,vy:0});
+  });
+}
+
+function loop(){
+  const r=cleoArea.getBoundingClientRect();
+  const cleoSX=r.left+r.width/2; 
+  const cleoSY=r.top+r.height*0.42;
+  particles.forEach(p=>{
+    const dx=p.x-cleoSX,dy=p.y-cleoSY,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<REPEL&&dist>1){const f=(REPEL-dist)/REPEL*FORCE;p.vx+=(dx/dist)*f;p.vy+=(dy/dist)*f;}
+    p.vx+=(p.ox-p.x)*SPRING; p.vy+=(p.oy-p.y)*SPRING;
+    p.vx*=FRIC; p.vy*=FRIC; p.x+=p.vx; p.y+=p.vy;
+    p.el.style.left=(p.x-SIZE/2)+'px'; p.el.style.top=(p.y-SIZE/2)+'px';
+    const spd=Math.sqrt(p.vx*p.vx+p.vy*p.vy);
+    p.el.style.opacity=0.45+Math.min(spd*0.05,0.55);
+    p.el.style.transform=`scale(${1+Math.min(spd*0.03,0.2)})`;
+  });
+  requestAnimationFrame(loop);
+}
+
+initParticles();
+setTimeout(initParticles,350);
+window.addEventListener('resize',initParticles);
+loop();
+
+// Particle canvas starry background
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+let W,H,pts=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;pts=Array.from({length:50},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.3+.3,a:Math.random()}));}
+resize();window.addEventListener('resize',resize);
+function drawCanvas(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(0,200,255,${p.a*.2})`;ctx.fill();});
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(0,180,220,${.05*(1-d/110)})`;ctx.lineWidth=.5;ctx.stroke();}}
+  requestAnimationFrame(drawCanvas);
+}
+drawCanvas();
 </script>
 </body>
 </html>
