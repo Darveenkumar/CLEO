@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CLEO</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
@@ -22,9 +21,7 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
   position:relative;
   cursor:pointer;
   width:160px;
-}
-
-@keyframes hoverfloat{
+}@keyframes hoverfloat{
   0%,100%{transform:translateY(0) rotate(0deg)}
   28%{transform:translateY(-12px) rotate(-1.2deg)}
   55%{transform:translateY(-18px) rotate(.8deg)}
@@ -42,7 +39,7 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
   text-shadow:0 0 12px rgba(0,220,255,.5);
 }
 
-/* ── CHAT BUBBLE (UNCHANGED) ── */
+/* ── CHAT BUBBLE ── */
 .chat-bubble{
   position:fixed;
   width:230px;
@@ -61,13 +58,11 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
   display:none;
   background-image:repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(0,220,255,.03) 20px);
 }
-
 .chat-bubble.show{
   opacity:1;
   transform:scale(1) translateY(0);
   display:block;
 }
-
 .chat-bubble::after{
   content:'';position:absolute;
   top:50%;right:100%;
@@ -75,20 +70,53 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
   border:7px solid transparent;
   border-right-color:rgba(0,220,255,.4);
 }
-
 .chat-bubble::before{
   content:'';position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,#00dcff,transparent);
   border-radius:8px 8px 0 0;
 }
 
+/* header row */
+.cb-header{
+  display:flex;align-items:center;gap:6px;
+  margin-bottom:7px;
+  padding-bottom:6px;
+  border-bottom:1px solid rgba(0,220,255,.12);
+}
+.cb-avatar{
+  width:20px;height:20px;border-radius:3px;
+  background:linear-gradient(135deg,#0a2a4a,#1060c8);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Courier New',monospace;font-size:8px;font-weight:700;
+  color:#00dcff;flex-shrink:0;
+  border:1px solid rgba(0,220,255,.35);
+  box-shadow:0 0 6px rgba(0,220,255,.25);
+}
+.cb-title{
+  font-family:'Courier New',monospace;font-size:10px;font-weight:700;
+  color:#00dcff;letter-spacing:.1em;text-transform:uppercase;
+}
+.cb-status{
+  display:flex;align-items:center;gap:3px;
+  font-size:8px;color:rgba(0,220,255,.4);letter-spacing:.06em;
+  margin-left:auto;font-family:'Courier New',monospace;
+}
+.status-dot{
+  width:4px;height:4px;border-radius:50%;
+  background:#4dffa0;box-shadow:0 0 4px #4dffa0;
+  animation:statusPulse 2s ease-in-out infinite;
+}
+@keyframes statusPulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* typing area */
 .cb-body{
   font-size:10px;line-height:1.7;
   color:rgba(180,230,255,.85);
   min-height:44px;
   font-family:'Courier New',monospace;
 }
-
+.typed-text .hi{color:#00dcff;font-weight:700;}
+.typed-text .letter{color:#00dcff;font-weight:700;}
 .cursor{
   display:inline-block;
   width:6px;height:10px;
@@ -98,127 +126,275 @@ html,body{background:transparent;overflow:visible;width:100%;padding-top:50px;}
   animation:cursorBlink .6s step-end infinite;
   border-radius:1px;
 }
-
 @keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* status bar */
+.cb-footer{
+  display:flex;align-items:center;gap:5px;
+  margin-top:7px;
+  padding-top:6px;
+  border-top:1px solid rgba(0,220,255,.1);
+  opacity:0;
+  transition:opacity .4s ease;
+}
+.cb-footer.show{opacity:1;}
+.cb-bar-wrap{flex:1;height:2px;background:rgba(0,220,255,.1);border-radius:99px;overflow:hidden;}
+.cb-bar{height:100%;width:0%;background:linear-gradient(90deg,#00dcff,#7b8cff);border-radius:99px;transition:width 1.5s ease;}
+.cb-bar.full{width:100%;}
+.cb-sys{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:rgba(0,220,255,.4);white-space:nowrap;font-family:'Courier New',monospace;}
+
+/* scan line on bubble */
+.cb-scan{
+  position:absolute;inset:0;border-radius:16px;overflow:hidden;pointer-events:none;
+}
+.cb-scan::after{
+  content:'';position:absolute;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,220,255,.4),transparent);
+  animation:scanLine 3s linear infinite;
+  top:0;
+}
+@keyframes scanLine{
+  0%{top:0;opacity:0}5%{opacity:1}95%{opacity:.6}100%{top:100%;opacity:0}
+}
 </style>
 </head>
-
 <body>
 
 <div class="cleo-wrap">
-
-  <!-- CHAT BUBBLE (UNCHANGED STRUCTURE) -->
-  <div class="chat-bubble" id="chatBubble">
-    <div class="cb-body">
-      <div class="typed-text" id="typedText">
-        <span class="cursor" id="cursor"></span>
+      <!-- Chat bubble — outside animation wrapper, positioned via JS -->
+    <div class="chat-bubble" id="chatBubble">
+      <div class="cb-scan"></div>
+      <div class="cb-header">
+        <div class="cb-avatar">CL</div>
+        <div class="cb-title">CLEO</div>
+        <div class="cb-status"><div class="status-dot"></div>Online</div>
+      </div>
+      <div class="cb-body">
+        <div class="typed-text" id="typedText"><span class="cursor" id="cursor"></span></div>
+      </div>
+      <div class="cb-footer" id="cbFooter">
+        <span class="cb-sys">SYS</span>
+        <div class="cb-bar-wrap"><div class="cb-bar" id="cbBar"></div></div>
+        <span class="cb-sys">OK</span>
       </div>
     </div>
-  </div>
 
-  <!-- 🔴 YOUR CLEO (NOT CHANGED AT ALL) -->
-  <div class="cleo-inner" id="cleoInner">
+    <div class="cleo-inner" id="cleoInner">
 
     <div class="cleo-svg-wrap">
+      <svg viewBox="0 0 220 280" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%">
+        <defs>
+          <radialGradient id="bG" cx="38%" cy="28%" r="68%">
+            <stop offset="0%" stop-color="#eef8ff"/>
+            <stop offset="50%" stop-color="#cce8f8"/>
+            <stop offset="100%" stop-color="#90c8e8"/>
+          </radialGradient>
+          <radialGradient id="hG" cx="36%" cy="26%" r="68%">
+            <stop offset="0%" stop-color="#f0faff"/>
+            <stop offset="45%" stop-color="#b8e0f8"/>
+            <stop offset="100%" stop-color="#70b8e0"/>
+          </radialGradient>
+          <radialGradient id="vG" cx="35%" cy="28%" r="65%">
+            <stop offset="0%" stop-color="#80c8ff"/>
+            <stop offset="50%" stop-color="#1060c8"/>
+            <stop offset="100%" stop-color="#020e28"/>
+          </radialGradient>
+          <radialGradient id="gG" cx="35%" cy="28%" r="65%">
+            <stop offset="0%" stop-color="#ffe080"/>
+            <stop offset="100%" stop-color="#c87800"/>
+          </radialGradient>
+          <!-- red ears -->
+          <radialGradient id="rG" cx="40%" cy="30%" r="65%">
+            <stop offset="0%" stop-color="#ff7080"/>
+            <stop offset="100%" stop-color="#c02030"/>
+          </radialGradient>
+          <linearGradient id="glG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,.55)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+          <filter id="sh"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="rgba(0,0,0,.28)"/></filter>
+          <filter id="sh2"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,.18)"/></filter>
+          <filter id="gw2"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
 
-      <!-- ❗ DO NOT MODIFY YOUR ORIGINAL CLEO SVG -->
-      <!-- PASTE YOUR EXACT SVG HERE -->
-      <!-- I DID NOT TOUCH IT -->
+        <!-- ground glow -->
+        <ellipse cx="110" cy="274" rx="50" ry="7" fill="rgba(0,180,255,.15)">
+          <animate attributeName="rx" values="50;62;50" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".15;.25;.15" dur="4s" repeatCount="indefinite"/>
+        </ellipse>
 
+        <!-- BODY -->
+        <path d="M55 168 Q50 232 52 268 L168 268 Q170 232 165 168 Q148 154 110 152 Q72 154 55 168Z" fill="url(#bG)" filter="url(#sh)"/>
+        <path d="M72 158 Q110 150 148 158 Q142 172 110 174 Q78 172 72 158Z" fill="url(#glG)" opacity=".5"/>
+        <path d="M64 182 Q110 174 156 182" stroke="rgba(0,200,220,.4)" stroke-width="1.5" fill="none" stroke-linecap="round">
+          <animate attributeName="opacity" values=".35;.7;.35" dur="2.2s" repeatCount="indefinite"/>
+        </path>
+        <circle cx="84"  cy="210" r="10" fill="url(#gG)" filter="url(#sh2)"/>
+        <circle cx="84"  cy="210" r="10" fill="url(#glG)" opacity=".4"/>
+        <circle cx="110" cy="210" r="10" fill="url(#gG)" filter="url(#sh2)"/>
+        <circle cx="110" cy="210" r="10" fill="url(#glG)" opacity=".4"/>
+        <circle cx="136" cy="210" r="10" fill="url(#gG)" filter="url(#sh2)"/>
+        <circle cx="136" cy="210" r="10" fill="url(#glG)" opacity=".4"/>
+        <circle cx="81"  cy="207" r="3.5" fill="rgba(255,255,255,.55)"/>
+        <circle cx="107" cy="207" r="3.5" fill="rgba(255,255,255,.55)"/>
+        <circle cx="133" cy="207" r="3.5" fill="rgba(255,255,255,.55)"/>
+        <rect x="82" y="234" width="56" height="20" rx="6" fill="rgba(0,100,200,.2)" stroke="rgba(0,220,255,.45)" stroke-width="1"/>
+        <text x="110" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
+
+        <!-- ARMS -->
+        <path d="M57 170 Q30 188 26 220 Q24 238 34 242 Q46 246 52 230 Q58 212 68 186Z" fill="url(#bG)" filter="url(#sh2)"/>
+        <ellipse cx="32"  cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
+        <ellipse cx="30"  cy="239" rx="8"  ry="5"  fill="url(#glG)" opacity=".4"/>
+        <!-- RIGHT ARM — waving -->
+        <g id="waveArm" style="transform-origin:163px 175px;">
+          <animateTransform attributeName="transform" type="rotate"
+            values="0 163 175; -35 163 175; -10 163 175; -40 163 175; -5 163 175; -35 163 175; 0 163 175"
+            keyTimes="0; 0.15; 0.3; 0.45; 0.6; 0.75; 1"
+            dur="1.8s" begin="1s" repeatCount="3"
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+          <path d="M163 170 Q190 188 194 220 Q196 238 186 242 Q174 246 168 230 Q162 212 152 186Z" fill="url(#bG)" filter="url(#sh2)"/>
+          <ellipse cx="188" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
+          <ellipse cx="186" cy="239" rx="8"  ry="5"  fill="url(#glG)" opacity=".4"/>
+          <!-- hand fingers hint -->
+          <ellipse cx="192" cy="232" rx="5" ry="4" fill="url(#bG)" opacity=".9"/>
+          <ellipse cx="196" cy="224" rx="4" ry="5" fill="url(#bG)" opacity=".9"/>
+          <ellipse cx="198" cy="215" rx="4" ry="5" fill="url(#bG)" opacity=".8"/>
+        </g>
+
+        <!-- neck ring -->
+        <ellipse cx="110" cy="153" rx="24" ry="6" fill="url(#gG)" filter="url(#sh2)"/>
+        <ellipse cx="110" cy="151" rx="20" ry="4" fill="url(#glG)" opacity=".5"/>
+        <rect x="94" y="134" width="32" height="22" rx="10" fill="url(#bG)" filter="url(#sh2)"/>
+
+        <!-- HELMET -->
+        <ellipse cx="110" cy="80" rx="72" ry="68" fill="url(#hG)" filter="url(#sh)"/>
+        <ellipse cx="90" cy="46" rx="40" ry="18" fill="url(#glG)" opacity=".42" transform="rotate(-10 90 46)"/>
+        <ellipse cx="110" cy="16" rx="18" ry="12" fill="url(#hG)" filter="url(#sh2)"/>
+        <ellipse cx="107" cy="13" rx="9"  ry="5"  fill="url(#glG)" opacity=".55"/>
+
+        <!-- RED ears -->
+        <ellipse cx="38"  cy="86" rx="14" ry="16" fill="url(#rG)" filter="url(#sh2)"/>
+        <ellipse cx="37"  cy="83" rx="7"  ry="8"  fill="rgba(255,200,200,.35)"/>
+        <ellipse cx="182" cy="86" rx="14" ry="16" fill="url(#rG)" filter="url(#sh2)"/>
+        <ellipse cx="181" cy="83" rx="7"  ry="8"  fill="rgba(255,200,200,.35)"/>
+
+        <!-- VISOR -->
+        <rect x="48" y="54" width="124" height="62" rx="28" fill="url(#vG)" opacity=".92"/>
+        <rect x="48" y="54" width="124" height="28" rx="28" fill="url(#glG)" opacity=".22"/>
+        <ellipse cx="88" cy="66" rx="28" ry="11" fill="rgba(255,255,255,.14)" transform="rotate(-6 88 66)"/>
+        <rect x="48" y="54" width="124" height="62" rx="28" fill="none" stroke="rgba(120,210,255,.35)" stroke-width="1.5"/>
+
+        <!-- EYES -->
+        <ellipse cx="84"  cy="86" rx="15" ry="14" fill="white"/>
+        <circle  cx="84"  cy="86" r="10" fill="#1a1008"/>
+        <circle  cx="84"  cy="86" r="8.5" fill="#2d1f08"/>
+        <circle  cx="84"  cy="86" r="6"   fill="#050200"/>
+        <circle  cx="87.5" cy="82" r="2.8" fill="rgba(255,255,255,.92)"/>
+        <circle  cx="81"  cy="90" r="1.4" fill="rgba(255,255,255,.35)"/>
+
+        <ellipse cx="136" cy="86" rx="15" ry="14" fill="white"/>
+        <circle  cx="136" cy="86" r="10" fill="#1a1008"/>
+        <circle  cx="136" cy="86" r="8.5" fill="#2d1f08"/>
+        <circle  cx="136" cy="86" r="6"   fill="#050200"/>
+        <circle  cx="139.5" cy="82" r="2.8" fill="rgba(255,255,255,.92)"/>
+        <circle  cx="133" cy="90" r="1.4" fill="rgba(255,255,255,.35)"/>
+
+        <!-- cheeks -->
+        <ellipse cx="58"  cy="100" rx="10" ry="7" fill="rgba(255,140,140,.15)" filter="url(#gw2)"/>
+        <ellipse cx="162" cy="100" rx="10" ry="7" fill="rgba(255,140,140,.15)" filter="url(#gw2)"/>
+
+        <!-- eyelids -->
+        <ellipse id="lidLtop" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
+        <ellipse id="lidLbot" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
+        <ellipse id="lidRtop" cx="136" cy="86" rx="15" ry="0" fill="url(#vG)"/>
+        <ellipse id="lidRbot" cx="136" cy="86" rx="15" ry="0" fill="url(#vG)"/>
+      </svg>
     </div>
 
     <div class="cleo-name">CLEO</div>
   </div>
-
 </div>
 
 <script>
+// ── blink ──
+function blink(){
+  const cS=7,oS=12,cD=70,oD=150,mR=14; let f=0;
+  const eyes=[{top:'lidLtop',bot:'lidLbot',cx:84,eT:72,eB:100},{top:'lidRtop',bot:'lidRbot',cx:136,eT:72,eB:100}];
+  const eI=t=>t*t*t, eO=t=>1-Math.pow(1-t,2.5);
+  function sl(p){const ry=p*mR;eyes.forEach(e=>{const tl=document.getElementById(e.top),bl=document.getElementById(e.bot);if(!tl||!bl)return;tl.setAttribute('rx',15);tl.setAttribute('ry',ry);tl.setAttribute('cx',e.cx);tl.setAttribute('cy',e.eT+ry);bl.setAttribute('rx',15);bl.setAttribute('ry',ry*.6);bl.setAttribute('cx',e.cx);bl.setAttribute('cy',e.eB-ry*.6);});}
+  const ci=setInterval(()=>{f++;sl(eI(f/cS));if(f>=cS){clearInterval(ci);f=0;setTimeout(()=>{const oi=setInterval(()=>{f++;sl(eO(1-f/oS));if(f>=oS){clearInterval(oi);sl(0);setTimeout(blink,2800+Math.random()*3500);}},oD/oS);},45);}},cD/cS);
+}
+setTimeout(blink,2000);
 
-/* ── MESSAGES (NEW FEATURE) ── */
-const messages = [
-  "Hi there! 👋 I'm CLEO.",
-  "Need help with anything?",
-  "I'm here if you're exploring something.",
-  "Hello again ✨",
-  "What are we working on today?",
-  "I’ve got you covered.",
-  "Ask me anything."
+// ── typing intro ──
+const lines = [
+  { text: "Hi there! 👋 I'm ", highlight: false },
+  { text: "CLEO", highlight: true },
+  { text: " — your\n", highlight: false },
+  { text: "C", highlight: true },{ text: "ompliance ", highlight: false },
+  { text: "L", highlight: true },{ text: "ifecycle\n", highlight: false },
+  { text: "E", highlight: true },{ text: "ngagement ", highlight: false },
+  { text: "O", highlight: true },{ text: "fficer ✨", highlight: false },
 ];
 
-let lastIndex = -1;
+let fullString = '';
+let segMap = []; // [{char, highlight}]
+lines.forEach(seg => {
+  for(const ch of seg.text){
+    segMap.push({ch, highlight: seg.highlight});
+  }
+});
 
-/* ── ELEMENTS ── */
-const bubble = document.getElementById('chatBubble');
-const cleo = document.getElementById('cleoInner');
-const typed = document.getElementById('typedText');
-const cursor = document.getElementById('cursor');
-
-/* ── STATE ── */
-let segMap = [];
 let charIdx = 0;
 let typingTimer = null;
-let hideTimer = null;
 
-/* ── RESET ── */
-function resetTyping(){
-  clearTimeout(typingTimer);
-  typed.innerHTML = "";
-  typed.appendChild(cursor);
-  cursor.style.display = "inline-block";
-  segMap = [];
-  charIdx = 0;
-}
-
-/* ── BUILD MESSAGE ── */
-function buildMessage(text){
-  resetTyping();
-  segMap = [...text];
-}
-
-/* ── TYPE EFFECT ── */
 function typeNext(){
   if(charIdx >= segMap.length){
-    cursor.style.display = "none";
+    document.getElementById('cursor').style.display='none';
+    setTimeout(()=>{
+      document.getElementById('cbFooter').classList.add('show');
+      setTimeout(()=>{ document.getElementById('cbBar').classList.add('full'); }, 100);
+    }, 300);
     return;
   }
-
-  const ch = segMap[charIdx++];
-
-  const span = document.createElement("span");
-  span.textContent = ch;
-
-  typed.insertBefore(span, cursor);
-
-  typingTimer = setTimeout(typeNext, 22 + Math.random()*28);
+  const {ch, highlight} = segMap[charIdx++];
+  if(ch === '\n'){
+    const br = document.createElement('br');
+    document.getElementById('typedText').insertBefore(br, document.getElementById('cursor'));
+  } else {
+    const span = document.createElement('span');
+    span.textContent = ch;
+    if(highlight) span.classList.add('letter');
+    document.getElementById('typedText').insertBefore(span, document.getElementById('cursor'));
+  }
+  // vary speed: faster for normal chars, slight pause on highlights
+  const delay = highlight ? 80 : (ch === ' ' ? 60 : 28 + Math.random()*30);
+  typingTimer = setTimeout(typeNext, delay);
 }
 
-/* ── POSITION (UNCHANGED LOGIC STYLE) ── */
+// ── show / hide on hover ──
+let shown = false, hideTimer = null;
+const bubble = document.getElementById('chatBubble');
+const cleoEl = document.getElementById('cleoInner');
+
 function positionBubble(){
-  const r = cleo.getBoundingClientRect();
+  const r = cleoEl.getBoundingClientRect();
+  const bw = 220;
+  const left = r.left + r.width/2 - bw/2;
+  const top  = r.top - 10; // will use transform to push above
   bubble.style.left = (r.right + 12) + 'px';
   bubble.style.top  = (r.top + r.height/2 - 100) + 'px';
 }
 
-/* ── SHOW / HIDE (FIXED HOVER SYSTEM ONLY) ── */
 function showBubble(){
   clearTimeout(hideTimer);
-
   positionBubble();
   bubble.classList.add('show');
-
-  let idx = Math.floor(Math.random() * messages.length);
-
-  if(messages.length > 1){
-    while(idx === lastIndex){
-      idx = Math.floor(Math.random() * messages.length);
-    }
+  if(!shown){
+    shown = true;
+    setTimeout(typeNext, 400);
   }
-
-  lastIndex = idx;
-
-  buildMessage(messages[idx]);
-
-  setTimeout(typeNext, 250);
 }
 
 function hideBubble(){
@@ -227,13 +403,10 @@ function hideBubble(){
   }, 500);
 }
 
-/* ── EVENTS (UNCHANGED) ── */
-cleo.addEventListener('mouseenter', showBubble);
-cleo.addEventListener('mouseleave', hideBubble);
+cleoEl.addEventListener('mouseenter', showBubble);
+cleoEl.addEventListener('mouseleave', hideBubble);
 bubble.addEventListener('mouseenter', ()=>clearTimeout(hideTimer));
 bubble.addEventListener('mouseleave', hideBubble);
-
 </script>
-
 </body>
 </html>
