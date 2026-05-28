@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO Mascot Widget - Clear Arm Path</title>
+<title>CLEO Mascot Widget - Fluid Natural Wave</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 /* Base Reset */
@@ -18,7 +18,7 @@ html, body {
   overflow: hidden;
 }
 
-/* Core Container Context - Expanded to allow arm full clearance */
+/* Core Container Context */
 .widget-wrapper {
   position: relative;
   display: inline-block;
@@ -35,7 +35,7 @@ html, body {
   cursor: pointer;
   animation: robotHover 4.5s ease-in-out infinite;
   position: absolute;
-  left: 60px; /* Pushed slightly right to give the left-sweeping arm room at the container boundary */
+  left: 60px; 
   top: 40px;
   z-index: 10;
   width: 130px; 
@@ -51,23 +51,25 @@ html, body {
   width: 100%;
 }
 
-/* HIGH, CONTROLLED OUTWARD WAVE (Left side of screen / CLEO's right arm) */
+/* NATURAL, FLUID OUTWARD WAVE (Left side of screen / CLEO's right arm) */
 .left-side-arm-group {
   transform-origin: 64px 170px;
   transform: rotate(0deg);
-  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  /* Uses a smooth spring-like bezier for entering and exiting the wave state */
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Triggered via JS for exactly two complete cycles, then automatically removed */
+/* Triggered via JS for exactly two complete cycles */
 .animate-wave {
-  animation: highDoubleWave 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 2;
+  /* Combined a unique acceleration curve (swift out, soft hold, smooth return) */
+  animation: naturalFluidWave 0.65s cubic-bezier(0.25, 1, 0.5, 1) 2;
 }
 
-/* Arc raised significantly higher to sweep cleanly upwards outside the chassis */
-@keyframes highDoubleWave {
+@keyframes naturalFluidWave {
   0%, 100% { transform: rotate(0deg); }
-  33% { transform: rotate(58deg); }  
-  66% { transform: rotate(38deg); }
+  35% { transform: rotate(56deg); }   /* Swift upward acceleration to peak */
+  50% { transform: rotate(58deg); }   /* Micro-cushion / biological hangtime at peak */
+  75% { transform: rotate(34deg); }   /* Elastic recovery swing */
 }
 
 .cleo-name {
@@ -85,10 +87,10 @@ html, body {
   color: #00dcff;
 }
 
-/* Dialogue Panel - Positioned safely on the opposite side of the wave path */
+/* Dialogue Panel */
 .chat-bubble {
   position: absolute;
-  left: 210px; /* Increased offset to completely clear the mascot's wide interactive footprint */
+  left: 210px; 
   top: 80px;   
   background: rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(16px) saturate(120%);
@@ -191,23 +193,6 @@ html, body {
           <animate attributeName="opacity" values=".16;.26;.16" dur="4.5s" repeatCount="indefinite"/>
         </ellipse>
 
-        <line x1="110" y1="18" x2="110" y2="9" stroke="#9fd8f0" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="110" cy="7" r="4.5" fill="#00dcff" filter="url(#gw)">
-          <animate attributeName="r" values="4;5.4;4" dur="2.4s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values=".8;1;.8" dur="2.4s" repeatCount="indefinite"/>
-        </circle>
-
-        <path d="M55 168 Q50 232 52 268 L168 268 Q170 232 165 168 Q148 154 110 152 Q72 154 55 168Z" fill="url(#bG)" filter="url(#sh)"/>
-        <path d="M72 158 Q110 150 148 158 Q142 172 110 174 Q78 172 72 158Z" fill="url(#glG)" opacity=".5"/>
-        <path d="M64 182 Q110 174 156 182" stroke="rgba(160,240,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        
-        <circle cx="84" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        <circle cx="110" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        <circle cx="136" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        
-        <rect x="82" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.25)" stroke="rgba(0,220,255,.5)" stroke-width="1"/>
-        <text x="110" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
-
         <g id="leftSideArm" class="left-side-arm-group">
           <path d="M57 170 Q30 188 26 220 Q24 238 34 242 Q46 246 52 230 Q58 212 68 186Z" fill="url(#bG)" filter="url(#sh2)"/>
           <ellipse cx="32" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
@@ -220,8 +205,25 @@ html, body {
           <ellipse cx="186" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
         </g>
 
+        <path d="M55 168 Q50 232 52 268 L168 268 Q170 232 165 168 Q148 154 110 152 Q72 154 55 168Z" fill="url(#bG)" filter="url(#sh)"/>
+        <path d="M72 158 Q110 150 148 158 Q142 172 110 174 Q78 172 72 158Z" fill="url(#glG)" opacity=".5"/>
+        <path d="M64 182 Q110 174 156 182" stroke="rgba(160,240,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        
+        <circle cx="84" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+        <circle cx="110" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+        <circle cx="136" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+        
+        <rect x="82" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.25)" stroke="rgba(0,220,255,.5)" stroke-width="1"/>
+        <text x="110" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
+
         <ellipse cx="110" cy="153" rx="24" ry="6" fill="url(#gG)" filter="url(#sh2)"/>
         <rect x="94" y="134" width="32" height="22" rx="11" fill="url(#bG)" filter="url(#sh2)"/>
+
+        <line x1="110" y1="18" x2="110" y2="9" stroke="#9fd8f0" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="110" cy="7" r="4.5" fill="#00dcff" filter="url(#gw)">
+          <animate attributeName="r" values="4;5.4;4" dur="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".8;1;.8" dur="2.4s" repeatCount="indefinite"/>
+        </circle>
 
         <ellipse cx="110" cy="80" rx="71" ry="67" fill="url(#hG)" filter="url(#sh)"/>
         <ellipse cx="88" cy="44" rx="40" ry="18" fill="url(#glG)" opacity=".42" transform="rotate(-10 88 44)"/>
