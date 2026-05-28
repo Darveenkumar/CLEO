@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO Mascot Widget - Perfected</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<title>CLEO Mascot Widget - Redefined</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-/* Reset and canvas transparency setup */
+/* Reset and canvas architecture transparency */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
   width: 100%;
@@ -18,63 +18,64 @@ html, body {
   overflow: hidden;
 }
 
-/* Base relative anchor container pinning the layout elements together */
+/* Core Layout Container Context */
 .widget-wrapper {
   position: relative;
   display: inline-block;
-  padding: 30px;
-  /* Accommodates static CLEO width + generous bubble expansion buffer safely */
-  min-width: 500px; 
-  min-height: 340px;
+  padding: 40px;
+  min-width: 540px; 
+  min-height: 360px;
 }
 
-/* CLEO Mascot Core Layout — Absolutely locked horizontally */
+/* CLEO Mascot Component Anchor — Strictly isolated horizontally */
 .cleo-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  animation: robotHover 4s ease-in-out infinite;
+  animation: robotHover 4.5s ease-in-out infinite;
   position: absolute;
-  left: 30px;
-  top: 30px;
+  left: 40px;
+  top: 40px;
   z-index: 10;
-  width: 130px; /* Fixed, predictable footprint */
+  width: 130px; 
 }
 
 @keyframes robotHover {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-7px); }
 }
 
 .cleo-svg-wrap {
-  filter: drop-shadow(0 12px 32px rgba(0, 180, 255, 0.35));
+  filter: drop-shadow(0 16px 36px rgba(0, 180, 255, 0.3));
   width: 100%;
 }
 
-/* Fluid Left Arm (Viewer's Left) — Shoulder joint anchor inside safe view limits */
+/* High-Reaching Enthusiastic Wave Engine (Pivots perfectly from the shoulder base) */
 .left-arm-group {
-  transform-origin: 52px 176px; 
+  transform-origin: 52px 176px;
+  transition: transform 0.25s ease;
 }
 
 .left-arm-group.wave-active {
-  animation: naturalArmWave 1.6s ease-in-out;
+  animation: highEnthusiasticWave 1.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-@keyframes naturalArmWave {
-  0%, 100% { transform: rotate(0deg) translate(0px, 0px); }
-  20% { transform: rotate(18deg) translate(-2px, -3px); }
-  40% { transform: rotate(4deg) translate(-1px, -1px); }
-  60% { transform: rotate(16deg) translate(-2px, -3px); }
-  80% { transform: rotate(6deg) translate(-1px, -1px); }
+@keyframes highEnthusiasticWave {
+  0% { transform: rotate(0deg) translate(0px, 0px); }
+  18% { transform: rotate(-58deg) translate(-6px, -12px); } /* Reaching up very high */
+  38% { transform: rotate(-38deg) translate(-2px, -8px); }  /* First wave cycle back */
+  58% { transform: rotate(-58deg) translate(-6px, -12px); } /* Second wave cycle high */
+  78% { transform: rotate(-42deg) translate(-3px, -9px); }  /* Settling phase */
+  100% { transform: rotate(0deg) translate(0px, 0px); }
 }
 
 .cleo-name {
   font-size: 10px;
-  letter-spacing: .16em;
+  letter-spacing: .18em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.4);
-  margin-top: 6px;
+  margin-top: 8px;
 }
 .cleo-name span {
   font-family: 'Syne', sans-serif;
@@ -84,72 +85,63 @@ html, body {
   color: #00dcff;
 }
 
-/* Absolute Pinned Cyber Bubble — Pushes strictly to the right without impacting CLEO */
+/* Redesigned Modern Glassmorphic Dialogue Panel — Grows cleanly rightward */
 .chat-bubble {
   position: absolute;
-  left: 172px; /* Fixed distance past CLEO's boundary + margin gap */
-  top: 75px;   /* Level with the glass visor interface line */
+  left: 176px; /* Positioned right past CLEO's boundary limit */
+  top: 80px;   /* Inline with visor axis geometry */
   
-  background: rgba(6, 12, 26, 0.94);
-  border: 1.5px solid #00dcff;
-  border-radius: 4px;
-  padding: 12px 16px;
-  box-shadow: 0 0 18px rgba(0, 220, 255, 0.25), inset 0 0 10px rgba(0, 220, 255, 0.15);
+  /* Modern Clean UI Styling */
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 2px solid #00dcff; /* Clean tech accent mark line */
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.1);
   
-  /* Sizing matrix - safely maps variable line lengths to the right */
+  /* Spatial Scaling Architecture */
   display: flex;
   align-items: center;
   width: max-content;
-  min-width: 60px;
-  max-width: 310px;
-  min-height: 58px;
+  min-width: 80px;
+  max-width: 320px;
+  min-height: 56px;
   z-index: 5;
   
-  /* Typography metrics */
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 12.5px;
-  line-height: 1.4;
-  color: #c1f7ff;
-  text-shadow: 0 0 4px rgba(0, 220, 255, 0.5);
+  /* Refined Typography */
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #e2f7ff;
+  letter-spacing: -0.01em;
   
-  /* Growth Scaling Mechanics */
+  /* Elastic Transition Opening Vectors */
   opacity: 0;
-  transform: scaleX(0.82);
-  transform-origin: left center; /* Forces transformation expansion vector rightward */
-  transition: opacity 0.22s ease, transform 0.26s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  transform: scaleX(0.88) translateX(-6px);
+  transform-origin: left center;
+  transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: none;
 }
 
-/* Hover detection targeting wrapper component triggers expansion */
+/* Hover wrapper boundaries triggers fluid scale out */
 .widget-wrapper:hover .chat-bubble {
   opacity: 1;
-  transform: scaleX(1);
-}
-
-/* Tech Pointer Triangle */
-.chat-bubble::before {
-  content: '';
-  position: absolute;
-  left: -7px;
-  top: 22px;
-  width: 10px;
-  height: 10px;
-  background: #060c1a;
-  border-left: 1.5px solid #00dcff;
-  border-bottom: 1.5px solid #00dcff;
-  transform: rotate(45deg);
+  transform: scaleX(1) translateX(0px);
 }
 
 #cursor {
   display: inline-block;
-  width: 6px;
-  height: 12px;
+  width: 2px;
+  height: 14px;
   background: #00dcff;
-  margin-left: 3px;
-  animation: techBlink 0.6s step-end infinite;
+  margin-left: 4px;
+  animation: smoothPulse 0.8s ease-in-out infinite;
   vertical-align: middle;
 }
-@keyframes techBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes smoothPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
 </style>
 </head>
 <body>
@@ -198,8 +190,8 @@ html, body {
         </defs>
 
         <ellipse cx="110" cy="274" rx="50" ry="7" fill="rgba(0,180,255,.16)">
-          <animate attributeName="rx" values="50;62;50" dur="4s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values=".16;.26;.16" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="rx" values="50;62;50" dur="4.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".16;.26;.16" dur="4.5s" repeatCount="indefinite"/>
         </ellipse>
 
         <line x1="110" y1="18" x2="110" y2="9" stroke="#9fd8f0" stroke-width="3" stroke-linecap="round"/>
@@ -327,16 +319,16 @@ function blink() {
 }
 setTimeout(blink, 2000);
 
-// ── Strict 10-Second Wave Core Trigger ──
+// ── Interactive Say-Hi Wave Dynamic Controller ──
 const leftArm = document.getElementById('leftArm');
-function triggerWave() {
+function executeEnthusiasticWave() {
   if (leftArm) {
+    // Force resetting keyframes cleanly on separate triggers
+    leftArm.classList.remove('wave-active');
+    void leftArm.offsetWidth; // Trigger reflow
     leftArm.classList.add('wave-active');
-    setTimeout(() => { leftArm.classList.remove('wave-active'); }, 1650);
   }
 }
-setInterval(triggerWave, 10000);
-setTimeout(triggerWave, 2200); // Welcoming greeting wave post startup
 
 // ── Rotational Dialogue Matrix ──
 const messages = [
@@ -352,8 +344,14 @@ const widget = document.getElementById('cleoWidget');
 const typed = document.getElementById('typedText');
 const cursor = document.getElementById('cursor');
 
-widget.addEventListener('mouseenter', () => { triggerTyping(); });
-widget.addEventListener('mouseleave', () => { resetTyping(); });
+widget.addEventListener('mouseenter', () => { 
+  executeEnthusiasticWave(); // Wave high every single time cursor hits CLEO
+  triggerTyping(); 
+});
+
+widget.addEventListener('mouseleave', () => { 
+  resetTyping(); 
+});
 
 function resetTyping() {
   clearTimeout(typingTimer);
@@ -367,7 +365,7 @@ function triggerTyping() {
   resetTyping();
   const currentPhrase = messages[messageIndex];
   messageIndex = (messageIndex + 1) % messages.length;
-  setTimeout(() => typeNext(currentPhrase), 120);
+  setTimeout(() => typeNext(currentPhrase), 140);
 }
 
 function typeNext(phrase) {
@@ -378,7 +376,7 @@ function typeNext(phrase) {
   const span = document.createElement('span');
   span.textContent = phrase[charIdx++];
   typed.insertBefore(span, cursor);
-  typingTimer = setTimeout(() => typeNext(phrase), 22 + Math.random() * 24);
+  typingTimer = setTimeout(() => typeNext(phrase), 20 + Math.random() * 20);
 }
 </script>
 </body>
