@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO Mascot Widget - Redefined</title>
+<title>CLEO Mascot Widget - Styled Typography</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 /* Reset and canvas architecture transparency */
@@ -51,22 +51,23 @@ html, body {
   width: 100%;
 }
 
-/* High-Reaching Enthusiastic Wave Engine (Pivots perfectly from the shoulder base) */
+/* NATURAL HIGH WAVE ENGINE */
 .left-arm-group {
-  transform-origin: 52px 176px;
-  transition: transform 0.25s ease;
+  transform-origin: 56px 176px;
+  transform: rotate(0deg) translate(0px, 0px);
 }
 
 .left-arm-group.wave-active {
-  animation: highEnthusiasticWave 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+  animation: naturalHighWave 1.3s cubic-bezier(0.37, 0, 0.63, 1) forwards;
 }
 
-@keyframes highEnthusiasticWave {
+@keyframes naturalHighWave {
   0% { transform: rotate(0deg) translate(0px, 0px); }
-  18% { transform: rotate(-58deg) translate(-6px, -12px); } /* Reaching up very high */
-  38% { transform: rotate(-38deg) translate(-2px, -8px); }  /* First wave cycle back */
-  58% { transform: rotate(-58deg) translate(-6px, -12px); } /* Second wave cycle high */
-  78% { transform: rotate(-42deg) translate(-3px, -9px); }  /* Settling phase */
+  20% { transform: rotate(-115deg) translate(-28px, 46px); }
+  35% { transform: rotate(-130deg) translate(-34px, 40px); }
+  50% { transform: rotate(-105deg) translate(-24px, 50px); }
+  65% { transform: rotate(-130deg) translate(-34px, 40px); }
+  80% { transform: rotate(-110deg) translate(-26px, 48px); }
   100% { transform: rotate(0deg) translate(0px, 0px); }
 }
 
@@ -85,23 +86,21 @@ html, body {
   color: #00dcff;
 }
 
-/* Redesigned Modern Glassmorphic Dialogue Panel — Grows cleanly rightward */
+/* Modern Glassmorphic Dialogue Panel — Grows cleanly rightward */
 .chat-bubble {
   position: absolute;
-  left: 176px; /* Positioned right past CLEO's boundary limit */
-  top: 80px;   /* Inline with visor axis geometry */
+  left: 176px; 
+  top: 80px;   
   
-  /* Modern Clean UI Styling */
   background: rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(16px) saturate(120%);
   -webkit-backdrop-filter: blur(16px) saturate(120%);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-left: 2px solid #00dcff; /* Clean tech accent mark line */
+  border-left: 2px solid #00dcff; 
   border-radius: 12px;
   padding: 14px 18px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.1);
   
-  /* Spatial Scaling Architecture */
   display: flex;
   align-items: center;
   width: max-content;
@@ -110,7 +109,6 @@ html, body {
   min-height: 56px;
   z-index: 5;
   
-  /* Refined Typography */
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 13px;
   font-weight: 400;
@@ -118,12 +116,18 @@ html, body {
   color: #e2f7ff;
   letter-spacing: -0.01em;
   
-  /* Elastic Transition Opening Vectors */
   opacity: 0;
   transform: scaleX(0.88) translateX(-6px);
   transform-origin: left center;
   transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: none;
+}
+
+/* Highlight style specifically for C, L, E, O */
+.chat-bubble .tech-highlight {
+  color: #00dcff;
+  font-weight: 600;
+  text-shadow: 0 0 8px rgba(0, 220, 255, 0.4);
 }
 
 /* Hover wrapper boundaries triggers fluid scale out */
@@ -148,6 +152,7 @@ html, body {
 
 <div class="widget-wrapper" id="cleoWidget">
   
+  <!-- Mascot UI Component Layer -->
   <div class="cleo-container">
     <div class="cleo-svg-wrap">
       <svg viewBox="0 0 220 280" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%">
@@ -178,7 +183,7 @@ html, body {
           <radialGradient id="rG" cx="40%" cy="30%" r="65%">
             <stop offset="0%" stop-color="#ff8a98"/>
             <stop offset="100%" stop-color="#d23344"/>
-          </radialGradient>
+          </linearGradient>
           <linearGradient id="glG" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="rgba(255,255,255,.55)"/>
             <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
@@ -189,17 +194,20 @@ html, body {
           <clipPath id="visorClip"><rect x="48" y="54" width="124" height="62" rx="28"/></clipPath>
         </defs>
 
+        <!-- Base system ground ring shadow -->
         <ellipse cx="110" cy="274" rx="50" ry="7" fill="rgba(0,180,255,.16)">
           <animate attributeName="rx" values="50;62;50" dur="4.5s" repeatCount="indefinite"/>
           <animate attributeName="opacity" values=".16;.26;.16" dur="4.5s" repeatCount="indefinite"/>
         </ellipse>
 
+        <!-- Antenna core -->
         <line x1="110" y1="18" x2="110" y2="9" stroke="#9fd8f0" stroke-width="3" stroke-linecap="round"/>
         <circle cx="110" cy="7" r="4.5" fill="#00dcff" filter="url(#gw)">
           <animate attributeName="r" values="4;5.4;4" dur="2.4s" repeatCount="indefinite"/>
           <animate attributeName="opacity" values=".8;1;.8" dur="2.4s" repeatCount="indefinite"/>
         </circle>
 
+        <!-- Torso Chassis -->
         <path d="M55 168 Q50 232 52 268 L168 268 Q170 232 165 168 Q148 154 110 152 Q72 154 55 168Z" fill="url(#bG)" filter="url(#sh)"/>
         <path d="M72 158 Q110 150 148 158 Q142 172 110 174 Q78 172 72 158Z" fill="url(#glG)" opacity=".5"/>
         <path d="M64 182 Q110 174 156 182" stroke="rgba(160,240,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
@@ -211,12 +219,14 @@ html, body {
         <rect x="82" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.25)" stroke="rgba(0,220,255,.5)" stroke-width="1"/>
         <text x="110" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
 
+        <!-- Safe High-Wave Arm Structure -->
         <g id="leftArm" class="left-arm-group">
           <path d="M57 170 Q30 188 26 220 Q24 238 34 242 Q46 246 52 230 Q58 212 68 186Z" fill="url(#bG)" filter="url(#sh2)"/>
           <ellipse cx="32" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
           <ellipse cx="30" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
         </g>
 
+        <!-- Right Arm Layer -->
         <path d="M163 170 Q190 188 194 220 Q196 238 186 242 Q174 246 168 230 Q162 212 152 186Z" fill="url(#bG)" filter="url(#sh2)"/>
         <ellipse cx="188" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
         <ellipse cx="186" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
@@ -224,6 +234,7 @@ html, body {
         <ellipse cx="110" cy="153" rx="24" ry="6" fill="url(#gG)" filter="url(#sh2)"/>
         <rect x="94" y="134" width="32" height="22" rx="11" fill="url(#bG)" filter="url(#sh2)"/>
 
+        <!-- Head Helmet System Frame -->
         <ellipse cx="110" cy="80" rx="71" ry="67" fill="url(#hG)" filter="url(#sh)"/>
         <ellipse cx="88" cy="44" rx="40" ry="18" fill="url(#glG)" opacity=".42" transform="rotate(-10 88 44)"/>
 
@@ -236,6 +247,7 @@ html, body {
         <ellipse cx="66" cy="103" rx="9" ry="5.5" fill="url(#ckG)"/>
         <ellipse cx="154" cy="103" rx="9" ry="5.5" fill="url(#ckG)"/>
 
+        <!-- Eyes -->
         <ellipse cx="84" cy="86" rx="15" ry="14" fill="white"/>
         <circle cx="84" cy="86" r="10" fill="#1a1008"/>
         <circle cx="84" cy="86" r="8.5" fill="#2d1f08"/>
@@ -254,6 +266,7 @@ html, body {
 
         <path d="M100 104 Q110 112 120 104" stroke="#5ef0ff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".9"/>
 
+        <!-- Eyelids -->
         <ellipse id="lidLtop" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
         <ellipse id="lidLbot" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
         <ellipse id="lidRtop" cx="136" cy="86" rx="15" ry="0" fill="url(#vG)"/>
@@ -263,6 +276,7 @@ html, body {
           <ellipse cx="86" cy="64" rx="30" ry="10" fill="rgba(255,255,255,.16)" transform="rotate(-6 86 64)"/>
         </g>
 
+        <!-- Orbit Background Ring -->
         <circle cx="110" cy="200" r="68" stroke="rgba(0,200,255,.07)" stroke-width="1.5" stroke-dasharray="4 9" fill="none">
           <animateTransform attributeName="transform" type="rotate" from="0 110 200" to="360 110 200" dur="18s" repeatCount="indefinite"/>
         </circle>
@@ -271,6 +285,7 @@ html, body {
     <div class="cleo-name"><span>CLEO</span></div>
   </div>
 
+  <!-- Dialogue Bubble -->
   <div class="chat-bubble" id="chatBubble">
     <span id="typedText"><span id="cursor"></span></span>
   </div>
@@ -278,7 +293,7 @@ html, body {
 </div>
 
 <script>
-// ── Authentic Eyelid Scaling Animation Engine ──
+// ── Eyelid Blink Engine ──
 function blink() {
   const closeSteps = 7, openSteps = 12;
   const closeDur = 70, openDur = 150;
@@ -319,18 +334,17 @@ function blink() {
 }
 setTimeout(blink, 2000);
 
-// ── Interactive Say-Hi Wave Dynamic Controller ──
+// ── Say-Hi Wave Controller ──
 const leftArm = document.getElementById('leftArm');
 function executeEnthusiasticWave() {
   if (leftArm) {
-    // Force resetting keyframes cleanly on separate triggers
     leftArm.classList.remove('wave-active');
-    void leftArm.offsetWidth; // Trigger reflow
+    void leftArm.offsetWidth; 
     leftArm.classList.add('wave-active');
   }
 }
 
-// ── Rotational Dialogue Matrix ──
+// ── Rotational Dialogue Matrix with Blue Initial Target Structuring ──
 const messages = [
   "CLEO Here... Compliance and Lifecycle Engagement Officer.",
   "System Diagnostics: 100% Operational. Ready to review assets.",
@@ -345,7 +359,7 @@ const typed = document.getElementById('typedText');
 const cursor = document.getElementById('cursor');
 
 widget.addEventListener('mouseenter', () => { 
-  executeEnthusiasticWave(); // Wave high every single time cursor hits CLEO
+  executeEnthusiasticWave(); 
   triggerTyping(); 
 });
 
@@ -373,8 +387,23 @@ function typeNext(phrase) {
     cursor.style.display = 'none';
     return;
   }
+  
+  const char = phrase[charIdx];
   const span = document.createElement('span');
-  span.textContent = phrase[charIdx++];
+  span.textContent = char;
+  
+  // Rule-based parsing to highlight target standalone initial tokens
+  const isTargetInitial = (charIdx === 0 && char === 'C') || 
+                          (charIdx === 15 && char === 'C') || 
+                          (charIdx === 30 && char === 'L') || 
+                          (charIdx === 40 && char === 'E') || 
+                          (charIdx === 51 && char === 'O');
+
+  if (isTargetInitial) {
+    span.classList.add('tech-highlight');
+  }
+  
+  charIdx++;
   typed.insertBefore(span, cursor);
   typingTimer = setTimeout(() => typeNext(phrase), 20 + Math.random() * 20);
 }
