@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO Mascot Widget - Natural Outward Wave</title>
+<title>CLEO Mascot Widget - Right Side Wave</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 /* Base Reset */
@@ -51,26 +51,26 @@ html, body {
   width: 100%;
 }
 
-/* NATURAL HAND MOVEMENT FOR "HI"
-  The transform origin is set right at the shoulder joint (56px, 172px).
-  The negative rotation sweeps the hand outwards into the open left area.
+/* NATURAL HAND MOVEMENT FOR "HI" (OPPOSITE SIDE / RIGHT ARM)
+  The transform origin is set right at the right shoulder joint (164px, 172px).
+  Positive rotation values sweep the hand outwards into the open right area.
 */
-.left-arm-group {
-  transform-origin: 56px 172px;
+.right-arm-group {
+  transform-origin: 164px 172px;
   transform: rotate(0deg);
   transition: transform 0.25s ease-out;
 }
 
-.widget-wrapper:hover .left-arm-group {
-  animation: naturalOutwardWave 1.3s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+.widget-wrapper:hover .right-arm-group {
+  animation: naturalRightOutwardWave 1.3s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
 }
 
-@keyframes naturalOutwardWave {
+@keyframes naturalRightOutwardWave {
   0%, 100% { transform: rotate(0deg); }
-  20% { transform: rotate(-52deg); }
-  40% { transform: rotate(-34deg); }
-  60% { transform: rotate(-58deg); }
-  80% { transform: rotate(-34deg); }
+  20% { transform: rotate(52deg); }
+  40% { transform: rotate(34deg); }
+  60% { transform: rotate(58deg); }
+  80% { transform: rotate(34deg); }
 }
 
 .cleo-name {
@@ -211,170 +211,16 @@ html, body {
         <rect x="82" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.25)" stroke="rgba(0,220,255,.5)" stroke-width="1"/>
         <text x="110" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
 
-        <g id="leftArm" class="left-arm-group">
+        <g id="leftArm">
           <path d="M56 172 Q38 188 32 216 Q28 234 38 240 Q49 244 56 228 Q62 210 66 184Z" fill="url(#bG)" filter="url(#sh2)"/>
           <circle cx="36" cy="240" r="13" fill="url(#bG)" filter="url(#sh2)"/>
           <ellipse cx="34" cy="236" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
         </g>
 
-        <path d="M163 170 Q190 188 194 220 Q196 238 186 242 Q174 246 168 230 Q162 212 152 186Z" fill="url(#bG)" filter="url(#sh2)"/>
-        <ellipse cx="188" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
-        <ellipse cx="186" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
-
-        <ellipse cx="110" cy="153" rx="24" ry="6" fill="url(#gG)" filter="url(#sh2)"/>
-        <rect x="94" y="134" width="32" height="22" rx="11" fill="url(#bG)" filter="url(#sh2)"/>
-
-        <ellipse cx="110" cy="80" rx="71" ry="67" fill="url(#hG)" filter="url(#sh)"/>
-        <ellipse cx="88" cy="44" rx="40" ry="18" fill="url(#glG)" opacity=".42" transform="rotate(-10 88 44)"/>
-
-        <ellipse cx="39" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
-        <ellipse cx="181" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
-
-        <rect x="48" y="54" width="124" height="62" rx="28" fill="url(#vG)"/>
-        <rect x="48" y="54" width="124" height="62" rx="28" fill="none" stroke="rgba(120,210,255,.45)" stroke-width="1.5"/>
-
-        <ellipse cx="66" cy="103" rx="9" ry="5.5" fill="url(#ckG)"/>
-        <ellipse cx="154" cy="103" rx="9" ry="5.5" fill="url(#ckG)"/>
-
-        <ellipse cx="84" cy="86" rx="15" ry="14" fill="white"/>
-        <circle cx="84" cy="86" r="10" fill="#1a1008"/>
-        <circle cx="84" cy="86" r="8.5" fill="#2d1f08"/>
-        <circle cx="84" cy="86" r="6" fill="#050200"/>
-        <circle cx="87.5" cy="82" r="2.8" fill="rgba(255,255,255,.9)"/>
-        <circle cx="81" cy="90" r="1.4" fill="rgba(255,255,255,.35)"/>
-        <ellipse cx="84" cy="74" rx="15" ry="6" fill="rgba(0,0,0,.15)"/>
-
-        <ellipse cx="136" cy="86" rx="15" ry="14" fill="white"/>
-        <circle cx="136" cy="86" r="10" fill="#1a1008"/>
-        <circle cx="136" cy="86" r="8.5" fill="#2d1f08"/>
-        <circle cx="136" cy="86" r="6" fill="#050200"/>
-        <circle cx="139.5" cy="82" r="2.8" fill="rgba(255,255,255,.9)"/>
-        <circle cx="133" cy="90" r="1.4" fill="rgba(255,255,255,.35)"/>
-        <ellipse cx="136" cy="74" rx="15" ry="6" fill="rgba(0,0,0,.15)"/>
-
-        <path d="M100 104 Q110 112 120 104" stroke="#5ef0ff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".9"/>
-
-        <ellipse id="lidLtop" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
-        <ellipse id="lidLbot" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
-        <ellipse id="lidRtop" cx="136" cy="86" rx="15" ry="0" fill="url(#vG)"/>
-        <ellipse id="lidRbot" cx="136" cy="86" rx="15" ry="0" fill="url(#vG)"/>
-
-        <g clip-path="url(#visorClip)">
-          <ellipse cx="86" cy="64" rx="30" ry="10" fill="rgba(255,255,255,.16)" transform="rotate(-6 86 64)"/>
+        <g id="rightArm" class="right-arm-group">
+          <path d="M164 172 Q182 188 188 216 Q192 234 182 240 Q171 244 164 228 Q158 210 154 184Z" fill="url(#bG)" filter="url(#sh2)"/>
+          <circle cx="184" cy="240" r="13" fill="url(#bG)" filter="url(#sh2)"/>
+          <ellipse cx="186" cy="236" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
         </g>
 
-        <circle cx="110" cy="200" r="68" stroke="rgba(0,200,255,.07)" stroke-width="1.5" stroke-dasharray="4 9" fill="none">
-          <animateTransform attributeName="transform" type="rotate" from="0 110 200" to="360 110 200" dur="18s" repeatCount="indefinite"/>
-        </circle>
-      </svg>
-    </div>
-    <div class="cleo-name"><span>CLEO</span></div>
-  </div>
-
-  <div class="chat-bubble" id="chatBubble">
-    <span id="typedText"><span id="cursor"></span></span>
-  </div>
-
-</div>
-
-<script>
-// Blink Engine
-function blink() {
-  const closeSteps = 7, openSteps = 12;
-  const closeDur = 70, openDur = 150;
-  const maxRy = 14; 
-  let f = 0;
-
-  const eyes = [
-    { top:'lidLtop', bot:'lidLbot', cx:84,  eyeTop:72, eyeBot:100 },
-    { top:'lidRtop', bot:'lidRbot', cx:136, eyeTop:72, eyeBot:100 },
-  ];
-
-  function easeIn(t){ return t*t*t; }
-  function easeOut(t){ return 1-Math.pow(1-t,2.5); }
-
-  function setLids(progress) {
-    const ry = progress * maxRy;
-    eyes.forEach(e => {
-      const tl = document.getElementById(e.top);
-      const bl = document.getElementById(e.bot);
-      if(!tl||!bl) return;
-      tl.setAttribute('rx', 15); tl.setAttribute('ry', ry); tl.setAttribute('cx', e.cx); tl.setAttribute('cy', e.eyeTop + ry);
-      bl.setAttribute('rx', 15); bl.setAttribute('ry', ry * 0.6); bl.setAttribute('cx', e.cx); bl.setAttribute('cy', e.eyeBot - ry * 0.6);
-    });
-  }
-
-  const ci = setInterval(() => {
-    f++; setLids(easeIn(f / closeSteps));
-    if (f >= closeSteps) {
-      clearInterval(ci); f = 0;
-      setTimeout(() => {
-        const oi = setInterval(() => {
-          f++; setLids(easeOut(1 - f / openSteps));
-          if (f >= openSteps) { clearInterval(oi); setLids(0); setTimeout(blink, 2800 + Math.random() * 3500); }
-        }, openDur / openSteps);
-      }, 45);
-    }
-  }, closeDur / closeSteps);
-}
-setTimeout(blink, 2000);
-
-// Typing / Dialogue Engine
-const messages = [
-  "CLEO Here... Compliance and Lifecycle Engagement Officer.",
-  "System Diagnostics: 100% Operational. Ready to review assets.",
-  "CLEO status online. Managing compliance matrices.",
-  "Hello! Compliance and Lifecycle Engagement Officer active."
-];
-let messageIndex = 0;
-let charIdx = 0, typingTimer = null;
-
-const widget = document.getElementById('cleoWidget');
-const typed = document.getElementById('typedText');
-const cursor = document.getElementById('cursor');
-
-widget.addEventListener('mouseenter', () => { triggerTyping(); });
-widget.addEventListener('mouseleave', () => { resetTyping(); });
-
-function resetTyping() {
-  clearTimeout(typingTimer);
-  typed.innerHTML = '';
-  typed.appendChild(cursor);
-  cursor.style.display = 'inline-block';
-  charIdx = 0;
-}
-
-function triggerTyping() {
-  resetTyping();
-  const currentPhrase = messages[messageIndex];
-  messageIndex = (messageIndex + 1) % messages.length;
-  setTimeout(() => typeNext(currentPhrase), 140);
-}
-
-function typeNext(phrase) {
-  if (charIdx >= phrase.length) {
-    cursor.style.display = 'none';
-    return;
-  }
-  
-  const char = phrase[charIdx];
-  const span = document.createElement('span');
-  span.textContent = char;
-  
-  const isTargetInitial = (charIdx === 0 && char === 'C') || 
-                          (charIdx === 15 && char === 'C') || 
-                          (charIdx === 30 && char === 'L') || 
-                          (charIdx === 40 && char === 'E') || 
-                          (charIdx === 51 && char === 'O');
-
-  if (isTargetInitial) {
-    span.classList.add('tech-highlight');
-  }
-  
-  charIdx++;
-  typed.insertBefore(span, cursor);
-  typingTimer = setTimeout(() => typeNext(phrase), 20 + Math.random() * 20);
-}
-</script>
-</body>
-</html>
+        <ellipse cx="110" cy="153" rx="24" ry="6" fill="
