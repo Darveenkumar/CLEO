@@ -1,106 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CLEO — Assistant</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f2ff;font-family:system-ui,-apple-system,sans-serif}
+#cleoInner{cursor:pointer;position:relative;display:inline-block;transition:transform .2s}
+#cleoInner:hover{transform:scale(1.06)}
+#chatBubble{
+  position:fixed;
+  background:#fff;
+  border:1px solid #d4cef8;
+  border-radius:14px;
+  padding:14px 18px;
+  min-width:200px;max-width:280px;
+  font-size:14px;line-height:1.5;
+  color:#1a1a2e;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s,transform .25s;
+  transform:translateX(-6px);
+  z-index:100;
+  box-shadow:0 4px 20px rgba(100,80,220,.12);
+}
+#chatBubble.show{opacity:1;pointer-events:auto;transform:translateX(0)}
+#chatBubble::before{content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-right-color:#d4cef8;border-left:0}
+#chatBubble::after{content:'';position:absolute;left:-6.5px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-right-color:#fff;border-left:0}
+#cursor{display:inline-block;width:2px;height:1em;background:#3d2ea6;vertical-align:text-bottom;margin-left:1px;animation:blink-cur .7s step-end infinite}
+@keyframes blink-cur{0%,100%{opacity:1}50%{opacity:0}}
+</style>
+</head>
+<body>
+
+<div id="cleoInner">
+  <svg width="180" height="220" viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="bodyGrad" cx="50%" cy="40%" r="55%">
+        <stop offset="0%" stop-color="#a89cf7"/>
+        <stop offset="100%" stop-color="#7c6de0"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="110" cy="160" rx="72" ry="80" fill="url(#bodyGrad)"/>
+    <ellipse cx="46" cy="168" rx="18" ry="30" fill="#9183e8" transform="rotate(-15 46 168)"/>
+    <ellipse cx="174" cy="168" rx="18" ry="30" fill="#9183e8" transform="rotate(15 174 168)"/>
+    <rect x="93" y="112" width="34" height="22" rx="10" fill="#9183e8"/>
+    <ellipse cx="110" cy="95" rx="58" ry="56" fill="url(#bodyGrad)"/>
+    <ellipse cx="54" cy="82" rx="14" ry="18" fill="#9183e8"/>
+    <ellipse cx="54" cy="82" rx="7" ry="10" fill="#c8bcf8"/>
+    <ellipse cx="166" cy="82" rx="14" ry="18" fill="#9183e8"/>
+    <ellipse cx="166" cy="82" rx="7" ry="10" fill="#c8bcf8"/>
+    <ellipse cx="110" cy="98" rx="44" ry="42" fill="#e8e2ff"/>
+    <ellipse id="eyeLw" cx="84" cy="90" rx="16" ry="16" fill="white"/>
+    <ellipse id="eyeRw" cx="136" cy="90" rx="16" ry="16" fill="white"/>
+    <ellipse id="pupilL" cx="84" cy="92" rx="8" ry="9" fill="#3d2ea6"/>
+    <ellipse id="pupilR" cx="136" cy="92" rx="8" ry="9" fill="#3d2ea6"/>
+    <circle cx="87" cy="88" r="3" fill="white" opacity=".7"/>
+    <circle cx="139" cy="88" r="3" fill="white" opacity=".7"/>
+    <ellipse id="lidLtop" cx="84" cy="72" rx="15" ry="0" fill="#7c6de0"/>
+    <ellipse id="lidRtop" cx="136" cy="72" rx="15" ry="0" fill="#7c6de0"/>
+    <ellipse id="lidLbot" cx="84" cy="100" rx="15" ry="0" fill="#7c6de0"/>
+    <ellipse id="lidRbot" cx="136" cy="100" rx="15" ry="0" fill="#7c6de0"/>
+    <ellipse cx="110" cy="104" rx="6" ry="4" fill="#a89cf7"/>
+    <path d="M96 115 Q110 127 124 115" stroke="#7c6de0" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="72" cy="108" rx="10" ry="6" fill="#f4a0c0" opacity=".5"/>
+    <ellipse cx="148" cy="108" rx="10" ry="6" fill="#f4a0c0" opacity=".5"/>
+    <ellipse cx="110" cy="180" rx="40" ry="34" fill="#c8bcf8" opacity=".6"/>
+    <ellipse cx="82" cy="235" rx="20" ry="10" fill="#7c6de0"/>
+    <ellipse cx="138" cy="235" rx="20" ry="10" fill="#7c6de0"/>
+  </svg>
+</div>
+
+<div id="chatBubble"><span id="typedText"><span id="cursor"></span></span></div>
+
 <script>
-// ── blink (UNCHANGED) ──
+// ── blink ──
 function blink(){
-  const cS=7,oS=12,cD=70,oD=150,mR=14; let f=0;
+  const cS=7,oS=12,cD=70,oD=150,mR=14;let f=0;
   const eyes=[{top:'lidLtop',bot:'lidLbot',cx:84,eT:72,eB:100},{top:'lidRtop',bot:'lidRbot',cx:136,eT:72,eB:100}];
-  const eI=t=>t*t*t, eO=t=>1-Math.pow(1-t,2.5);
+  const eI=t=>t*t*t,eO=t=>1-Math.pow(1-t,2.5);
   function sl(p){const ry=p*mR;eyes.forEach(e=>{const tl=document.getElementById(e.top),bl=document.getElementById(e.bot);if(!tl||!bl)return;tl.setAttribute('rx',15);tl.setAttribute('ry',ry);tl.setAttribute('cx',e.cx);tl.setAttribute('cy',e.eT+ry);bl.setAttribute('rx',15);bl.setAttribute('ry',ry*.6);bl.setAttribute('cx',e.cx);bl.setAttribute('cy',e.eB-ry*.6);});}
   const ci=setInterval(()=>{f++;sl(eI(f/cS));if(f>=cS){clearInterval(ci);f=0;setTimeout(()=>{const oi=setInterval(()=>{f++;sl(eO(1-f/oS));if(f>=oS){clearInterval(oi);sl(0);setTimeout(blink,2800+Math.random()*3500);}},oD/oS);},45);}},cD/cS);
 }
 setTimeout(blink,2000);
 
-// ── HOOVER MESSAGES (NEW SYSTEM) ──
-const messages = [
-  "Hi there! 👋 I'm CLEO — your assistant ✨",
+// ── hover messages ──
+const messages=[
+  "Hi there! I'm CLEO — your assistant",
   "Need a hand with anything?",
   "I'm here if you're exploring something.",
-  "Hello again 👀",
+  "Hello again",
   "What are we working on today?",
-  "I’ve got you covered.",
+  "I've got you covered.",
   "Ask me anything."
 ];
-
-let lastIndex = -1;
-
-// ── TYPING STATE ──
-let segMap = [];
-let charIdx = 0;
-let typingTimer = null;
-
-const bubble = document.getElementById('chatBubble');
-const cleoEl = document.getElementById('cleoInner');
-const typed = document.getElementById('typedText');
-const cursor = document.getElementById('cursor');
-
-function resetTyping(){
-  clearTimeout(typingTimer);
-  typed.innerHTML = "";
-  typed.appendChild(cursor);
-  cursor.style.display = "inline-block";
-  segMap = [];
-  charIdx = 0;
-}
-
-function buildMessage(text){
-  resetTyping();
-  segMap = [...text];
-}
-
-function typeNext(){
-  if(charIdx >= segMap.length){
-    cursor.style.display = "none";
-    return;
-  }
-
-  const ch = segMap[charIdx++];
-
-  const span = document.createElement("span");
-  span.textContent = ch;
-
-  typed.insertBefore(span, cursor);
-
-  typingTimer = setTimeout(typeNext, 22 + Math.random()*28);
-}
-
-// ── POSITION (UNCHANGED LOGIC) ──
-function positionBubble(){
-  const r = cleoEl.getBoundingClientRect();
-  bubble.style.left = (r.right + 12) + 'px';
-  bubble.style.top  = (r.top + r.height/2 - 100) + 'px';
-}
-
-// ── SHOW / HIDE (UPDATED ONLY LOGIC) ──
+let lastIndex=-1,segMap=[],charIdx=0,typingTimer=null;
+const bubble=document.getElementById('chatBubble');
+const cleoEl=document.getElementById('cleoInner');
+const typed=document.getElementById('typedText');
+const cursor=document.getElementById('cursor');
+function resetTyping(){clearTimeout(typingTimer);typed.innerHTML='';typed.appendChild(cursor);cursor.style.display='inline-block';segMap=[];charIdx=0;}
+function buildMessage(text){resetTyping();segMap=[...text];}
+function typeNext(){if(charIdx>=segMap.length){cursor.style.display='none';return;}const ch=segMap[charIdx++];const span=document.createElement('span');span.textContent=ch;typed.insertBefore(span,cursor);typingTimer=setTimeout(typeNext,22+Math.random()*28);}
+function positionBubble(){const r=cleoEl.getBoundingClientRect();bubble.style.left=(r.right+14)+'px';bubble.style.top=(r.top+r.height/2-40)+'px';}
 let hideTimer;
-
-function showBubble(){
-  clearTimeout(hideTimer);
-
-  positionBubble();
-  bubble.classList.add('show');
-
-  // pick new message every hover (no repeat)
-  let idx = Math.floor(Math.random() * messages.length);
-  if(messages.length > 1){
-    while(idx === lastIndex){
-      idx = Math.floor(Math.random() * messages.length);
-    }
-  }
-  lastIndex = idx;
-
-  buildMessage(messages[idx]);
-
-  setTimeout(typeNext, 250);
-}
-
-function hideBubble(){
-  hideTimer = setTimeout(()=>{
-    bubble.classList.remove('show');
-  }, 500);
-}
-
-// ── EVENTS (UNCHANGED) ──
-cleoEl.addEventListener('mouseenter', showBubble);
-cleoEl.addEventListener('mouseleave', hideBubble);
-bubble.addEventListener('mouseenter', ()=>clearTimeout(hideTimer));
-bubble.addEventListener('mouseleave', hideBubble);
+function showBubble(){clearTimeout(hideTimer);positionBubble();bubble.classList.add('show');let idx=Math.floor(Math.random()*messages.length);if(messages.length>1){while(idx===lastIndex)idx=Math.floor(Math.random()*messages.length);}lastIndex=idx;buildMessage(messages[idx]);setTimeout(typeNext,250);}
+function hideBubble(){hideTimer=setTimeout(()=>{bubble.classList.remove('show');},500);}
+cleoEl.addEventListener('mouseenter',showBubble);
+cleoEl.addEventListener('mouseleave',hideBubble);
+bubble.addEventListener('mouseenter',()=>clearTimeout(hideTimer));
+bubble.addEventListener('mouseleave',hideBubble);
 </script>
+</body>
+</html>
