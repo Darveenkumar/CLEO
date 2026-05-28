@@ -4,120 +4,51 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CLEO Mascot Widget</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* Reset and clear background for widget transparency */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
   width: 100%;
   height: 100%;
-  background: transparent !important; /* Forces transparency for dashboard placement */
+  background: transparent !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Inter', sans-serif;
   overflow: hidden;
 }
 
-/* Fixed Base Wrapper */
-.widget-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+/* Side-by-side layout containing CLEO and the dynamic bubble */
+.widget-wrapper {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 340px;
-  height: 380px;
+  gap: 16px;
+  position: relative;
+  padding: 20px;
 }
 
-/* True Mascot Wrapper with Hover Idle Animation Only */
-.cleo-inner {
+/* CLEO Mascot Component Base */
+.cleo-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
   cursor: pointer;
-  animation: subtleFloat 4s ease-in-out infinite;
+  animation: robotFloat 4s ease-in-out infinite;
   position: relative;
   z-index: 10;
+  flex-shrink: 0;
 }
 
-/* Pure CSS floating - zero layout breaking shifts */
-@keyframes subtleFloat {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-6px) rotate(-0.5deg); }
-  50% { transform: translateY(-10px) rotate(0.5deg); }
-  75% { transform: translateY(-4px) rotate(-0.2deg); }
+@keyframes robotFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 .cleo-svg-wrap {
-  filter: drop-shadow(0 12px 28px rgba(0, 180, 255, 0.25));
-  width: 130px;
+  filter: drop-shadow(0 12px 32px rgba(0, 180, 255, 0.32));
+  width: 125px;
 }
-
-/* Floating Chat Bubble CSS */
-.chat-bubble {
-  position: absolute;
-  background: #091225;
-  border: 1px solid rgba(0, 220, 255, 0.25);
-  border-radius: 14px;
-  padding: 12px 18px;
-  width: 240px;
-  min-height: 64px;
-  font-size: 13px;
-  line-height: 1.4;
-  color: #ffffff;
-  box-shadow: 0 8px 32px rgba(0, 180, 255, 0.2);
-  
-  /* Fixed positioning offset natively near his helmet */
-  top: 15px;
-  left: 215px;
-  
-  opacity: 0;
-  transform: scale(0.9) translateX(-10px);
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none;
-  z-index: 100;
-}
-
-/* Pop state triggered securely via CSS hover */
-.widget-container:hover .chat-bubble {
-  opacity: 1;
-  transform: scale(1) translateX(0);
-}
-
-/* Pointer Arrow */
-.chat-bubble::before {
-  content: '';
-  position: absolute;
-  left: -8px;
-  top: 30px;
-  transform: translateY(-50%);
-  border: 8px solid transparent;
-  border-right-color: rgba(0, 220, 255, 0.25);
-  border-left: 0;
-}
-.chat-bubble::after {
-  content: '';
-  position: absolute;
-  left: -6.5px;
-  top: 30px;
-  transform: translateY(-50%);
-  border: 8px solid transparent;
-  border-right-color: #091225;
-  border-left: 0;
-}
-
-#cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1.1em;
-  background: #00dcff;
-  vertical-align: text-bottom;
-  margin-left: 2px;
-  animation: blinkCur .7s step-end infinite;
-}
-@keyframes blinkCur { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
 .cleo-name {
   font-size: 10px;
@@ -133,151 +64,322 @@ html, body {
   letter-spacing: .1em;
   color: #00dcff;
 }
+
+/* Cybernetic Robot-Styled Dynamic Chat Bubble */
+.chat-bubble {
+  background: rgba(6, 12, 26, 0.9);
+  border: 1.5px solid #00dcff;
+  border-radius: 4px;
+  padding: 10px 14px;
+  box-shadow: 0 0 15px rgba(0, 220, 255, 0.25), inset 0 0 8px rgba(0, 220, 255, 0.1);
+  
+  /* Layout constraints - expands and contracts following text length */
+  display: flex;
+  align-items: center;
+  min-width: 40px;
+  max-width: 260px;
+  height: auto;
+  min-height: 54px;
+  
+  /* Typography setup */
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: #c1f7ff;
+  text-shadow: 0 0 4px rgba(0, 220, 255, 0.5);
+  
+  /* Visibility Matrix */
+  opacity: 0;
+  transform: translateX(-8px) scale(0.95);
+  transition: opacity 0.25s ease, transform 0.25s ease, width 0.2s ease, height 0.2s ease;
+  pointer-events: none;
+  position: relative;
+}
+
+/* Displays bubble perfectly on right side hover layout */
+.widget-wrapper:hover .chat-bubble {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+/* Tech Angular Arrow Pointer */
+.chat-bubble::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 20px;
+  width: 10px;
+  height: 10px;
+  background: #060c1a;
+  border-left: 1.5px solid #00dcff;
+  border-bottom: 1.5px solid #00dcff;
+  transform: rotate(45deg);
+}
+
+#cursor {
+  display: inline-block;
+  width: 6px;
+  height: 12px;
+  background: #00dcff;
+  margin-left: 3px;
+  animation: techBlink 0.6s step-end infinite;
+  vertical-align: middle;
+}
+@keyframes techBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 </style>
 </head>
 <body>
 
-<div class="widget-container" id="cleoWidget">
+<div class="widget-wrapper" id="cleoWidget">
   
-  <div class="chat-bubble" id="chatBubble">
-    <span id="typedText"><span id="cursor"></span></span>
-  </div>
-
-  <div class="cleo-inner">
+  <!-- Mascot Component -->
+  <div class="cleo-container">
     <div class="cleo-svg-wrap">
       <svg viewBox="0 0 220 280" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%">
         <defs>
+          <!-- body: light grey-white with soft blue tint -->
           <radialGradient id="bG" cx="38%" cy="28%" r="68%">
             <stop offset="0%" stop-color="#f2fbff"/>
             <stop offset="50%" stop-color="#cfeaf8"/>
             <stop offset="100%" stop-color="#8fc6e6"/>
           </radialGradient>
+          <!-- helmet: matching light white-blue -->
           <radialGradient id="hG" cx="36%" cy="26%" r="68%">
             <stop offset="0%" stop-color="#f4fcff"/>
             <stop offset="45%" stop-color="#bce3f8"/>
             <stop offset="100%" stop-color="#73bae2"/>
           </radialGradient>
+          <!-- visor: userSpaceOnUse so the lids can share it → seamless blink -->
           <radialGradient id="vG" gradientUnits="userSpaceOnUse" cx="92" cy="70" r="96">
             <stop offset="0%" stop-color="#1f63a8"/>
             <stop offset="50%" stop-color="#093058"/>
             <stop offset="100%" stop-color="#03102a"/>
           </radialGradient>
+          <!-- glowing eye -->
+          <radialGradient id="eG" cx="38%" cy="32%" r="62%">
+            <stop offset="0%" stop-color="#e8fffd"/>
+            <stop offset="45%" stop-color="#62f0ff"/>
+            <stop offset="100%" stop-color="#00b6dc"/>
+          </radialGradient>
+          <!-- cheek blush -->
+          <radialGradient id="ckG" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(255,150,170,.75)"/>
+            <stop offset="100%" stop-color="rgba(255,150,170,0)"/>
+          </radialGradient>
+          <!-- gold -->
           <radialGradient id="gG" cx="35%" cy="28%" r="65%">
             <stop offset="0%" stop-color="#ffe080"/>
             <stop offset="100%" stop-color="#c87800"/>
           </radialGradient>
+          <!-- red ear -->
           <radialGradient id="rG" cx="40%" cy="30%" r="65%">
             <stop offset="0%" stop-color="#ff8a98"/>
             <stop offset="100%" stop-color="#d23344"/>
-          </radialGradient>
-          <radialGradient id="ckG" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="rgba(255,150,170,.75)"/>
-            <stop offset="100%" stop-color="rgba(255,150,170,0)"/>
           </radialGradient>
           <linearGradient id="glG" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="rgba(255,255,255,.55)"/>
             <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
           </linearGradient>
-          <filter id="sh"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="rgba(0,0,0,.2)"/> </filter>
-          <filter id="sh2"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,.15)"/></filter>
+          <filter id="sh"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="rgba(0,0,0,.32)"/></filter>
+          <filter id="sh2"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,.22)"/></filter>
           <filter id="gw"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <clipPath id="visorClip"><rect x="48" y="54" width="124" height="62" rx="28"/></clipPath>
         </defs>
 
-        <ellipse cx="110" cy="274" rx="44" ry="6" fill="rgba(0,180,255,.15)"/>
+        <!-- ground glow -->
+        <ellipse cx="110" cy="274" rx="50" ry="7" fill="rgba(0,180,255,.16)">
+          <animate attributeName="rx" values="50;62;50" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".16;.26;.16" dur="4s" repeatCount="indefinite"/>
+        </ellipse>
 
+        <!-- antenna with glowing bobble -->
         <line x1="110" y1="18" x2="110" y2="9" stroke="#9fd8f0" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="110" cy="7" r="4.5" fill="#00dcff" filter="url(#gw)"/>
+        <circle cx="110" cy="7" r="4.5" fill="#00dcff" filter="url(#gw)">
+          <animate attributeName="r" values="4;5.4;4" dur="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".8;1;.8" dur="2.4s" repeatCount="indefinite"/>
+        </circle>
 
+        <!-- ── BODY ── -->
         <path d="M55 168 Q50 232 52 268 L168 268 Q170 232 165 168 Q148 154 110 152 Q72 154 55 168Z" fill="url(#bG)" filter="url(#sh)"/>
+        <!-- body gloss -->
         <path d="M72 158 Q110 150 148 158 Q142 172 110 174 Q78 172 72 158Z" fill="url(#glG)" opacity=".5"/>
-        <path d="M64 182 Q110 174 156 182" stroke="rgba(160,240,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        
+        <!-- teal trim line -->
+        <path d="M64 182 Q110 174 156 182" stroke="rgba(160,240,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round">
+          <animate attributeName="opacity" values=".4;.8;.4" dur="2.2s" repeatCount="indefinite"/>
+        </path>
+        <!-- 3 gold chest buttons -->
         <circle cx="84" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+        <circle cx="84" cy="210" r="9" fill="url(#glG)" opacity=".4"/>
         <circle cx="110" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+        <circle cx="110" cy="210" r="9" fill="url(#glG)" opacity=".4"/>
         <circle cx="136" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+        <circle cx="136" cy="210" r="9" fill="url(#glG)" opacity=".4"/>
+        <!-- button highlights -->
         <circle cx="81" cy="207" r="3" fill="rgba(255,255,255,.6)"/>
         <circle cx="107" cy="207" r="3" fill="rgba(255,255,255,.6)"/>
         <circle cx="133" cy="207" r="3" fill="rgba(255,255,255,.6)"/>
-        
+        <!-- CLEO badge -->
         <rect x="82" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.25)" stroke="rgba(0,220,255,.5)" stroke-width="1"/>
         <text x="110" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
 
+        <!-- ── ARMS ── -->
         <path d="M57 170 Q30 188 26 220 Q24 238 34 242 Q46 246 52 230 Q58 212 68 186Z" fill="url(#bG)" filter="url(#sh2)"/>
         <ellipse cx="32" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
+        <ellipse cx="30" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
         <path d="M163 170 Q190 188 194 220 Q196 238 186 242 Q174 246 168 230 Q162 212 152 186Z" fill="url(#bG)" filter="url(#sh2)"/>
         <ellipse cx="188" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
+        <ellipse cx="186" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
 
+        <!-- gold neck ring -->
         <ellipse cx="110" cy="153" rx="24" ry="6" fill="url(#gG)" filter="url(#sh2)"/>
+        <ellipse cx="110" cy="151" rx="20" ry="4" fill="url(#glG)" opacity=".5"/>
+
+        <!-- ── NECK ── -->
         <rect x="94" y="134" width="32" height="22" rx="11" fill="url(#bG)" filter="url(#sh2)"/>
 
+        <!-- ── HELMET ── -->
         <ellipse cx="110" cy="80" rx="71" ry="67" fill="url(#hG)" filter="url(#sh)"/>
-        <ellipse cx="39" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
-        <ellipse cx="181" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
+        <!-- helmet gloss -->
+        <ellipse cx="88" cy="44" rx="40" ry="18" fill="url(#glG)" opacity=".42" transform="rotate(-10 88 44)"/>
 
+        <!-- red ear discs -->
+        <ellipse cx="39" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
+        <ellipse cx="38" cy="82" rx="7" ry="8" fill="rgba(255,210,210,.45)"/>
+        <ellipse cx="181" cy="86" rx="14" ry="17" fill="url(#rG)" filter="url(#sh2)"/>
+        <ellipse cx="180" cy="82" rx="7" ry="8" fill="rgba(255,210,210,.45)"/>
+
+        <!-- ── VISOR (dark glass over face) ── -->
         <rect x="48" y="54" width="124" height="62" rx="28" fill="url(#vG)"/>
         <rect x="48" y="54" width="124" height="62" rx="28" fill="none" stroke="rgba(120,210,255,.45)" stroke-width="1.5"/>
 
-        <ellipse cx="66" cy="103" rx="9" ry="5.5" fill="url(#ckG)"/>
-        <ellipse cx="154" cy="103" rx="9" ry="5.5" fill="url(#ckG)"/>
+        <!-- cheek blushes -->
+        <ellipse cx="66" cy="103" rx="9" ry="5.5" fill="url(#ckG)">
+          <animate attributeName="opacity" values=".6;.95;.6" dur="3s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="154" cy="103" rx="9" ry="5.5" fill="url(#ckG)">
+          <animate attributeName="opacity" values=".6;.95;.6" dur="3s" repeatCount="indefinite"/>
+        </ellipse>
 
+        <!-- ── HUMAN HYBRID EYES (Authentic Layout Restored) ── -->
+        <!-- left eye white -->
         <ellipse cx="84" cy="86" rx="15" ry="14" fill="white"/>
+        <!-- left iris - dark brown -->
+        <circle cx="84" cy="86" r="10" fill="#1a1008"/>
+        <circle cx="84" cy="86" r="8.5" fill="#2d1f08"/>
+        <!-- left pupil -->
         <circle cx="84" cy="86" r="6" fill="#050200"/>
+        <!-- left catchlights -->
         <circle cx="87.5" cy="82" r="2.8" fill="rgba(255,255,255,.9)"/>
+        <circle cx="81" cy="90" r="1.4" fill="rgba(255,255,255,.35)"/>
+        <!-- left eye shadow top -->
         <ellipse cx="84" cy="74" rx="15" ry="6" fill="rgba(0,0,0,.15)"/>
 
+        <!-- right eye white -->
         <ellipse cx="136" cy="86" rx="15" ry="14" fill="white"/>
+        <!-- right iris -->
+        <circle cx="136" cy="86" r="10" fill="#1a1008"/>
+        <circle cx="136" cy="86" r="8.5" fill="#2d1f08"/>
+        <!-- right pupil -->
         <circle cx="136" cy="86" r="6" fill="#050200"/>
+        <!-- right catchlights -->
         <circle cx="139.5" cy="82" r="2.8" fill="rgba(255,255,255,.9)"/>
+        <circle cx="133" cy="90" r="1.4" fill="rgba(255,255,255,.35)"/>
+        <!-- right eye shadow top -->
         <ellipse cx="136" cy="74" rx="15" ry="6" fill="rgba(0,0,0,.15)"/>
 
-        <path d="M100 104 Q110 112 124 104" stroke="#5ef0ff" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <!-- little smile -->
+        <path d="M100 104 Q110 112 120 104" stroke="#5ef0ff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".9"/>
 
+        <!-- eyelids — ellipse-based, share the visor gradient so they vanish into the glass -->
         <ellipse id="lidLtop" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
         <ellipse id="lidLbot" cx="84"  cy="86" rx="15" ry="0" fill="url(#vG)"/>
         <ellipse id="lidRtop" cx="136" cy="86" rx="15" ry="0" fill="url(#vG)"/>
         <ellipse id="lidRbot" cx="136" cy="86" rx="15" ry="0" fill="url(#vG)"/>
+
+        <!-- glass sheen ABOVE lids (clipped) -->
+        <g clip-path="url(#visorClip)">
+          <ellipse cx="86" cy="64" rx="30" ry="10" fill="rgba(255,255,255,.16)" transform="rotate(-6 86 64)"/>
+        </g>
+
+        <!-- orbit ring -->
+        <circle cx="110" cy="200" r="68" stroke="rgba(0,200,255,.07)" stroke-width="1.5" stroke-dasharray="4 9" fill="none">
+          <animateTransform attributeName="transform" type="rotate" from="0 110 200" to="360 110 200" dur="18s" repeatCount="indefinite"/>
+        </circle>
       </svg>
     </div>
     <div class="cleo-name"><span>CLEO</span></div>
   </div>
 
+  <!-- Robot Dialogue Box Component -->
+  <div class="chat-bubble" id="chatBubble">
+    <span id="typedText"><span id="cursor"></span></span>
+  </div>
+
 </div>
 
 <script>
-// --- Native Blink Loop Engine ---
+// ── Authentic Eyelid Scaling Animation Engine ──
 function blink() {
-  const cS = 7, oS = 12, cD = 70, oD = 150, mR = 14; let f = 0;
+  const closeSteps = 7, openSteps = 12;
+  const closeDur = 70, openDur = 150;
+  const maxRy = 14; 
+  let f = 0;
+
   const eyes = [
-    { top: 'lidLtop', bot: 'lidLbot', cx: 84,  eT: 72, eB: 100 },
-    { top: 'lidRtop', bot: 'lidRbot', cx: 136, eT: 72, eB: 100 }
+    { top:'lidLtop', bot:'lidLbot', cx:84,  eyeTop:72, eyeBot:100 },
+    { top:'lidRtop', bot:'lidRbot', cx:136, eyeTop:72, eyeBot:100 },
   ];
-  const eI = t => t*t*t, eO = t => 1-Math.pow(1-t, 2.5);
-  function sl(p) {
-    const ry = p * mR;
+
+  function easeIn(t){ return t*t*t; }
+  function easeOut(t){ return 1-Math.pow(1-t,2.5); }
+
+  function setLids(progress) {
+    const ry = progress * maxRy;
     eyes.forEach(e => {
-      const tl = document.getElementById(e.top), bl = document.getElementById(e.bot);
-      if(!tl || !bl) return;
-      tl.setAttribute('rx', 15); tl.setAttribute('ry', ry); tl.setAttribute('cx', e.cx); tl.setAttribute('cy', e.eT + ry);
-      bl.setAttribute('rx', 15); bl.setAttribute('ry', ry * 0.6); bl.setAttribute('cx', e.cx); bl.setAttribute('cy', e.eB - ry * 0.6);
+      const tl = document.getElementById(e.top);
+      const bl = document.getElementById(e.bot);
+      if(!tl||!bl) return;
+      tl.setAttribute('rx', 15);
+      tl.setAttribute('ry', ry);
+      tl.setAttribute('cx', e.cx);
+      tl.setAttribute('cy', e.eyeTop + ry);
+      
+      bl.setAttribute('rx', 15);
+      bl.setAttribute('ry', ry * 0.6);
+      bl.setAttribute('cx', e.cx);
+      bl.setAttribute('cy', e.eyeBot - ry * 0.6);
     });
   }
+
   const ci = setInterval(() => {
-    f++; sl(eI(f / cS));
-    if (f >= cS) {
+    f++;
+    setLids(easeIn(f / closeSteps));
+    if (f >= closeSteps) {
       clearInterval(ci); f = 0;
       setTimeout(() => {
         const oi = setInterval(() => {
-          f++; sl(eO(1 - f / oS));
-          if (f >= oS) { clearInterval(oi); sl(0); setTimeout(blink, 3000 + Math.random() * 3000); }
-        }, oD / oS);
+          f++;
+          setLids(easeOut(1 - f / openSteps));
+          if (f >= openSteps) {
+            clearInterval(oi);
+            setLids(0);
+            setTimeout(blink, 2800 + Math.random() * 3500);
+          }
+        }, openDur / openSteps);
       }, 45);
     }
-  }, cD / cS);
+  }, closeDur / closeSteps);
 }
 setTimeout(blink, 2000);
 
-// --- Custom Title Typing Engine ---
-const fullMessage = "CLEO Here... Compliance and Lifecycle Engagement Officer.";
+// ── Rotational Dialogue Matrix ──
+const messages = [
+  "CLEO Here... Compliance and Lifecycle Engagement Officer.",
+  "System Diagnostics: 100% Operational. Ready to review assets.",
+  "CLEO status online. Managing compliance matrices.",
+  "Hello! Compliance and Lifecycle Engagement Officer active."
+];
+let messageIndex = 0;
 let charIdx = 0, typingTimer = null;
 
 const widget = document.getElementById('cleoWidget');
@@ -297,18 +399,23 @@ function resetTyping() {
 
 function triggerTyping() {
   resetTyping();
-  setTimeout(typeNext, 200);
+  
+  const currentPhrase = messages[messageIndex];
+  messageIndex = (messageIndex + 1) % messages.length;
+  
+  setTimeout(() => typeNext(currentPhrase), 150);
 }
 
-function typeNext() {
-  if (charIdx >= fullMessage.length) {
+function typeNext(phrase) {
+  if (charIdx >= phrase.length) {
     cursor.style.display = 'none';
     return;
   }
   const span = document.createElement('span');
-  span.textContent = fullMessage[charIdx++];
+  span.textContent = phrase[charIdx++];
   typed.insertBefore(span, cursor);
-  typingTimer = setTimeout(typeNext, 35 + Math.random() * 25);
+  
+  typingTimer = setTimeout(() => typeNext(phrase), 25 + Math.random() * 20);
 }
 </script>
 </body>
