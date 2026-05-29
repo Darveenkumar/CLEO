@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO Mascot Widget - Correct Layering</title>
+<title>CLEO Mascot Widget - Refined Style</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 /* Base Reset */
@@ -23,7 +23,7 @@ html, body {
   position: relative;
   display: inline-block;
   padding: 40px;
-  min-width: 600px; 
+  min-width: 580px; 
   min-height: 380px;
 }
 
@@ -47,86 +47,96 @@ html, body {
 }
 
 .cleo-svg-wrap {
-  filter: drop-shadow(0 16px 36px rgba(0, 180, 255, 0.3));
+  filter: drop-shadow(0 16px 36px rgba(0, 180, 255, 0.25));
   width: 100%;
 }
 
-/* ORIGINAL FRONT-LAYERED MOVING ARM (CLEO's Right / Left Viewport) */
+/* ORIGINAL FRONT-LAYERED MOVING ARM */
 .left-side-arm-group {
-  transform-origin: 92px 178px; /* Balanced joint pivot point for front shoulder positioning */
+  transform-origin: 92px 178px; 
   transform: rotate(0deg);
   transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Triggered via JS for exactly two complete cycles */
 .animate-wave {
   animation: naturalFluidWave 0.65s cubic-bezier(0.25, 1, 0.5, 1) 2;
 }
 
 @keyframes naturalFluidWave {
   0%, 100% { transform: rotate(0deg); }
-  35% { transform: rotate(56deg); }   /* Swift natural acceleration upward */
-  50% { transform: rotate(58deg); }   /* Micro-cushion at maximum extension */
-  75% { transform: rotate(34deg); }   /* Elastic recovery swing */
+  35% { transform: rotate(56deg); }   
+  50% { transform: rotate(58deg); }   
+  75% { transform: rotate(34deg); }   
 }
 
-.cleo-name {
-  font-size: 10px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin-top: 8px;
-}
-.cleo-name span {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: .1em;
-  color: #00dcff;
-}
-
-/* Dialogue Panel */
+/* Premium 3D Glassmorphism Speech Bubble Style */
 .chat-bubble {
   position: absolute;
-  left: 235px; 
-  top: 80px;   
-  background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(16px) saturate(120%);
-  -webkit-backdrop-filter: blur(16px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-left: 2px solid #00dcff; 
-  border-radius: 12px;
-  padding: 14px 18px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  left: 195px; /* Moved closer to CLEO's chassis */
+  top: 65px;   
+  background: linear-gradient(135deg, rgba(230, 245, 255, 0.12) 0%, rgba(10, 25, 50, 0.45) 100%);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  
+  /* Vibrant glossy border layout */
+  border: 1px solid rgba(0, 220, 255, 0.25);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 18px;
+  padding: 15px 20px;
+  
+  /* Complex internal reflections and glowing depth dropshadows */
+  box-shadow: 
+    0 20px 45px rgba(0, 10, 30, 0.45), 
+    inset 0 1px 12px rgba(255, 255, 255, 0.15),
+    inset 0 -4px 15px rgba(0, 180, 255, 0.1),
+    0 0 20px rgba(0, 220, 255, 0.15);
+    
   display: flex;
   align-items: center;
   width: max-content;
   min-width: 80px;
-  max-width: 320px;
-  min-height: 56px;
+  max-width: 330px;
+  min-height: 60px;
   z-index: 5;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.45;
-  color: #e2f7ff;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #f0f9ff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 0 8px rgba(0, 220, 255, 0.2);
   letter-spacing: -0.01em;
   opacity: 0;
-  transform: scaleX(0.88) translateX(-6px);
+  transform: scale(0.9) translateX(-10px);
   transform-origin: left center;
-  transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: none;
+}
+
+/* Speech Bubble Decorative Tail Hook */
+.chat-bubble::before {
+  content: "";
+  position: absolute;
+  left: -9px;
+  top: 22px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 9px solid rgba(0, 220, 255, 0.25);
+  filter: drop-shadow(-2px 0 2px rgba(0, 220, 255, 0.15));
+  z-index: -1;
 }
 
 .chat-bubble .tech-highlight {
   color: #00dcff;
-  font-weight: 600;
-  text-shadow: 0 0 8px rgba(0, 220, 255, 0.4);
+  font-weight: 700;
+  text-shadow: 0 0 12px rgba(0, 220, 255, 0.6);
 }
 
 .widget-wrapper:hover .chat-bubble {
   opacity: 1;
-  transform: scaleX(1) translateX(0px);
+  transform: scale(1) translateX(0px);
 }
 
 #cursor {
@@ -137,6 +147,7 @@ html, body {
   margin-left: 4px;
   animation: smoothPulse 0.8s ease-in-out infinite;
   vertical-align: middle;
+  box-shadow: 0 0 8px #00dcff;
 }
 @keyframes smoothPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
 </style>
@@ -267,7 +278,6 @@ html, body {
         </circle>
       </svg>
     </div>
-    <div class="cleo-name"><span>CLEO</span></div>
   </div>
 
   <div class="chat-bubble" id="chatBubble">
