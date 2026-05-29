@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO Mascot Widget - Fixed Boundary Wave</title>
+<title>CLEO Mascot Widget - Correct Layering</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 /* Base Reset */
@@ -27,7 +27,7 @@ html, body {
   min-height: 380px;
 }
 
-/* Mascot Container Configuration - Expanded width to allow full arm extension */
+/* Mascot Container Configuration */
 .cleo-container {
   display: flex;
   flex-direction: column;
@@ -38,7 +38,7 @@ html, body {
   left: 30px; 
   top: 40px;
   z-index: 10;
-  width: 170px; /* Increased from 130px to fully prevent HTML clipping */
+  width: 170px; 
 }
 
 @keyframes robotHover {
@@ -51,9 +51,9 @@ html, body {
   width: 100%;
 }
 
-/* NATURAL, FLUID OUTWARD WAVE */
+/* ORIGINAL FRONT-LAYERED MOVING ARM (CLEO's Right / Left Viewport) */
 .left-side-arm-group {
-  transform-origin: 94px 170px; /* Offset to align perfectly with the shifted layout coordinates */
+  transform-origin: 92px 178px; /* Balanced joint pivot point for front shoulder positioning */
   transform: rotate(0deg);
   transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -65,9 +65,9 @@ html, body {
 
 @keyframes naturalFluidWave {
   0%, 100% { transform: rotate(0deg); }
-  35% { transform: rotate(56deg); }   
-  50% { transform: rotate(58deg); }   
-  75% { transform: rotate(34deg); }   
+  35% { transform: rotate(56deg); }   /* Swift natural acceleration upward */
+  50% { transform: rotate(58deg); }   /* Micro-cushion at maximum extension */
+  75% { transform: rotate(34deg); }   /* Elastic recovery swing */
 }
 
 .cleo-name {
@@ -191,6 +191,17 @@ html, body {
           <animate attributeName="opacity" values=".16;.26;.16" dur="4.5s" repeatCount="indefinite"/>
         </ellipse>
 
+        <path d="M85 168 Q80 232 82 268 L198 268 Q200 232 195 168 Q178 154 140 152 Q102 154 85 168Z" fill="url(#bG)" filter="url(#sh)"/>
+        <path d="M102 158 Q140 150 178 158 Q172 172 140 174 Q108 172 102 158Z" fill="url(#glG)" opacity=".5"/>
+        <path d="M94 182 Q140 174 186 182" stroke="rgba(160,240,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        
+        <circle cx="114" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+        <circle cx="140" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+        <circle cx="166" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+        
+        <rect x="112" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.25)" stroke="rgba(0,220,255,.5)" stroke-width="1"/>
+        <text x="140" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
+
         <g id="leftSideArm" class="left-side-arm-group">
           <path d="M87 170 Q60 188 56 220 Q54 238 64 242 Q76 246 82 230 Q88 212 98 186Z" fill="url(#bG)" filter="url(#sh2)"/>
           <ellipse cx="62" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
@@ -202,17 +213,6 @@ html, body {
           <ellipse cx="218" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
           <ellipse cx="216" cy="239" rx="8" ry="5" fill="url(#glG)" opacity=".4"/>
         </g>
-
-        <path d="M85 168 Q80 232 82 268 L198 268 Q200 232 195 168 Q178 154 140 152 Q102 154 85 168Z" fill="url(#bG)" filter="url(#sh)"/>
-        <path d="M102 158 Q140 150 178 158 Q172 172 140 174 Q108 172 102 158Z" fill="url(#glG)" opacity=".5"/>
-        <path d="M94 182 Q140 174 186 182" stroke="rgba(160,240,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        
-        <circle cx="114" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        <circle cx="140" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        <circle cx="166" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        
-        <rect x="112" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.25)" stroke="rgba(0,220,255,.5)" stroke-width="1"/>
-        <text x="140" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
 
         <ellipse cx="140" cy="153" rx="24" ry="6" fill="url(#gG)" filter="url(#sh2)"/>
         <rect x="124" y="134" width="32" height="22" rx="11" fill="url(#bG)" filter="url(#sh2)"/>
@@ -318,7 +318,7 @@ function blink() {
 }
 setTimeout(blink, 2000);
 
-// Typing / Dialogue / TWO-WAVE LIMIT CONTROLLER
+// Typing / Dialogue Controller
 const messages = [
   "CLEO Here... Compliance and Lifecycle Engagement Officer.",
   "System Diagnostics: 100% Operational. Ready to review assets.",
