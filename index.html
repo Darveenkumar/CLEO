@@ -42,7 +42,7 @@ html, body {
   transform-origin: bottom center;
   opacity: 0;
   transform: translateY(340px) scale(0.85);
-  pointer-events: none; /* Controlled explicitly via child elements */
+  pointer-events: none;
 }
 
 /* Slower entry layout */
@@ -460,7 +460,7 @@ html, body {
           <circle id="earRight" cx="214" cy="84" r="14" fill="url(#earGlow)" filter="url(#sh2)"/>
 
           <rect id="visorBg" x="78" y="54" width="124" height="62" rx="28" fill="url(#vG)"/>
-          <rect class="visor-scanlines" x="78" y="54" width="124" height="62" rx="28" fill="url(#scanlines)" opacity="1"/>
+          <rect class="visor-scanlines" x="78" y="54" width="124" height="62" rx="28" fill="rgba(0,0,0,0.08)" opacity="1"/>
 
           <ellipse id="blushLeft"  cx="94"  cy="98" rx="10" ry="5" fill="url(#rG)" opacity="0.9"/>
           <ellipse id="blushRight" cx="186" cy="98" rx="10" ry="5" fill="url(#rG)" opacity="0.9"/>
@@ -468,14 +468,14 @@ html, body {
           <g id="eyeGroup">
             <g id="leftEyePair" transform-origin="112px 84px">
               <circle cx="112" cy="84" r="14" fill="white"/>
-              <circle id="eyeLeftPupil"  cx="112" cy="84" r="9" fill="#081022"/>
+              <circle id="eyeLeftPupil"  cx="112" cy="84" r="10.65" fill="#081022"/>
               <circle id="eyeLeftShine"  cx="109.5" cy="81.5" r="3.2" fill="white"/>
               <circle cx="115" cy="87" r="1.5" fill="white" opacity="0.6"/>
             </g>
 
             <g id="rightEyePair" transform-origin="168px 84px">
               <circle cx="168" cy="84" r="14" fill="white"/>
-              <circle id="eyeRightPupil" cx="168" cy="84" r="9" fill="#081022"/>
+              <circle id="eyeRightPupil" cx="168" cy="84" r="10.65" fill="#081022"/>
               <circle id="eyeRightShine" cx="165.5" cy="81.5" r="3.2" fill="white"/>
               <circle cx="171" cy="87" r="1.5" fill="white" opacity="0.6"/>
             </g>
@@ -596,12 +596,12 @@ const svg           = widget.querySelector('svg');
 
 const eyeBaseL = { cx: 112, cy: 84 };
 const eyeBaseR = { cx: 168, cy: 84 };
-const maxOffset = 3.5;
+const maxOffset = 3.1; // Balanced max bounds tracking constraint 
 
 function trackMouseInteractions(e) {
   if (!activePresence || container.classList.contains('rocket-jetting-right')) return;
   
-  // 1. Eye Tracking
+  // 1. Precise Vector Eye Tracking Loop
   const rect = svg.getBoundingClientRect();
   const mx = ((e.clientX - rect.left) / rect.width) * 280;
   const my = ((e.clientY - rect.top)  / rect.height) * 430;
@@ -620,7 +620,7 @@ function trackMouseInteractions(e) {
   movePupil(eyeBaseL, eyeLP, eyeLS);
   movePupil(eyeBaseR, eyeRP, eyeRS);
 
-  // 2. Continuous Small Note Positioning
+  // 2. Continuous Note Boundary Alignment
   const widgetRect = widget.getBoundingClientRect();
   const noteX = e.clientX - widgetRect.left;
   const noteY = e.clientY - widgetRect.top;
@@ -635,14 +635,14 @@ function resetPupils() {
   eyeRS.setAttribute('cx', 165.5); eyeRS.setAttribute('cy', 81.5);
 }
 
-// Global movement handler
+// Global move trigger handler
 window.addEventListener('mousemove', (e) => {
   if (isHovered) {
     trackMouseInteractions(e);
   }
 });
 
-// Click updates mood chain
+// Structural mood layout switch controller
 widget.addEventListener('click', () => {
   if (!isHovered || !activePresence || container.classList.contains('rocket-jetting-right') || container.classList.contains('rocket-spawning')) return;
   currentMoodIdx = (currentMoodIdx + 1) % moods.length;
@@ -650,7 +650,7 @@ widget.addEventListener('click', () => {
   triggerTyping();
 });
 
-// Parent screen box boundaries control appearance window entries
+// App Window Interface Logic Bounds
 widget.addEventListener('mouseenter', () => {
   isHovered = true;
   widget.classList.add('active-hover');
@@ -691,7 +691,7 @@ widget.addEventListener('mouseleave', () => {
   }, 10000);
 });
 
-/* NEW: Isolate "DO NOT POKE.." visibility specifically to the vector paths */
+/* Strict explicit target constraint handler for the floating helper label */
 bodyTarget.addEventListener('mouseenter', () => {
   if (activePresence && !container.classList.contains('rocket-jetting-right')) {
     pokeNote.classList.add('visible');
