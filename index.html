@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEO Premium Kinetic Widget</title>
+<title>CLEO Retro Rocket Flame Widget</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=500;700&family=Syne:wght=800&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,7 +33,6 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
   position: absolute;
   left: 30px;
   top: 50px;
@@ -42,10 +41,10 @@ html, body {
   transform-origin: bottom center;
   opacity: 0;
   transform: translateY(340px) scale(0.85);
-  pointer-events: none;
+  pointer-events: none; /* Controlled explicitly via class matching */
 }
 
-/* ─── SLOWER ROCKET LANDING OVER-OVERSHOOT ENTRY ─── */
+/* Slower entry layout */
 .cleo-container.rocket-spawning {
   opacity: 1;
   animation: rocketLandingStyle 1.05s cubic-bezier(0.23, 1, 0.32, 1) forwards;
@@ -54,13 +53,12 @@ html, body {
   0% { transform: translateY(340px) scale(0.7) scaleY(1.3); opacity: 0.2; }
   65% { transform: translateY(-28px) scale(1.04) scaleY(0.92); opacity: 1; }
   82% { transform: translateY(4px) scale(0.98) scaleY(1.02); opacity: 1; }
-  100% { transform: translateY(0) scale(1) scaleY(1); opacity: 1; pointer-events: auto; }
+  100% { transform: translateY(0) scale(1) scaleY(1); opacity: 1; }
 }
 
-/* Persistent Global Hovering Loop (Active whenever he is alive) */
+/* Persistent Hovering Loop */
 .cleo-container.ready {
   opacity: 1;
-  pointer-events: auto;
   animation: robotHoverEngine 4.5s ease-in-out infinite;
 }
 @keyframes robotHoverEngine {
@@ -68,14 +66,20 @@ html, body {
   50% { transform: translateY(-10px) rotate(0.5deg); }
 }
 
-/* Focused Cursor Micro-Interaction Overrides */
-.cleo-container.ready:hover {
+/* Focused Cursor Interactions over valid vector zones */
+.cleo-container.ready.cleo-body-hovered {
   transform: scale(1.03) rotate(1deg) translateY(-4px) !important;
 }
 
 .cleo-svg-wrap {
   width: 100%;
   transition: filter 0.35s ease;
+}
+
+/* Targetable elements for actual physical body parts */
+.cleo-interactive-target {
+  cursor: pointer;
+  pointer-events: auto; /* Activates interaction strictly over shapes */
 }
 
 /* Mechanical Pivot Arms Matrix */
@@ -143,7 +147,7 @@ html, body {
 }
 @keyframes dreamySwayRight { 0% { transform: rotate(5deg); } 100% { transform: rotate(-12deg); } }
 
-/* ─── STYLISH HORIZONTAL ROCKET FLY-RIGHT EXIT ─── */
+/* STYLISH HORIZONTAL ROCKET FLY-RIGHT EXIT */
 .cleo-container.rocket-jetting-right {
   animation: rocketFlyRightExit 0.75s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards !important;
   pointer-events: none !important;
@@ -155,20 +159,37 @@ html, body {
   100% { transform: translateX(640px) translateY(-120px) rotate(68deg) scaleX(1.4) scaleY(0.85); opacity: 0; } 
 }
 
-/* Integrated Rocket Fire Structural Plume */
+/* Integrated Thruster Flame System */
 #rocketFlameGroup {
   opacity: 0;
-  transform: translateY(-10px) scale(0.5);
-  transform-origin: 140px 270px;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translateY(-8px) scaleY(0.5);
+  transform-origin: 140px 266px;
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .engine-firing #rocketFlameGroup {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translateY(0) scaleY(1);
+}
+
+/* High Fidelity Combustion Flicker Animation */
+.engine-firing .fire-plume-blur-outer {
+  animation: combustionOuterFlicker 0.15s ease-in-out infinite alternate;
+}
+.engine-firing .fire-plume-blur-inner {
+  animation: combustionInnerFlicker 0.09s ease-in-out infinite alternate;
+}
+
+@keyframes combustionOuterFlicker {
+  0% { transform: scaleX(0.96) scaleY(0.95); opacity: 0.85; filter: url(#blurFlameOuter); }
+  100% { transform: scaleX(1.04) scaleY(1.06); opacity: 1; filter: url(#blurFlameOuterDistort); }
+}
+@keyframes combustionInnerFlicker {
+  0% { transform: scaleX(0.95) scaleY(0.97); opacity: 0.9; }
+  100% { transform: scaleX(1.05) scaleY(1.03); opacity: 1; }
 }
 
 /* Eye Blinking Pipeline */
-.eyes-blink ellipse {
+.eyes-blink circle {
   animation: blinkScale 0.16s linear forwards;
 }
 @keyframes blinkScale {
@@ -270,6 +291,31 @@ html, body {
 .spark, .star-particle { position: absolute; pointer-events: none; opacity: 0; z-index: 15; }
 .spark { width: 4px; height: 4px; border-radius: 50%; }
 .star-particle { font-size: 10px; line-height: 1; }
+
+/* ─── DYNAMIC FLOATING UNDER-CURSOR NOTE ─── */
+.cursor-poke-note {
+  position: absolute;
+  pointer-events: none;
+  background: transparent; /* Stripped background pill completely */
+  border: none;             /* Stripped border */
+  color: #ffffff;           /* Plain white color */
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 8.2px;         /* Compact small word size */
+  letter-spacing: 0.6px;
+  font-weight: 700;
+  padding: 0;               /* Zeroed out inner padding */
+  white-space: nowrap;
+  box-shadow: none;         /* Removed box glow */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8); /* Drop shadow to ensure readability against any light BG layers */
+  z-index: 999;
+  opacity: 0;
+  transform: translate(12px, 12px) scale(0.85);
+  transition: opacity 0.12s linear, transform 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cursor-poke-note.visible {
+  opacity: 0.85;            /* Clean, elegant visibility */
+  transform: translate(12px, 12px) scale(1);
+}
 </style>
 </head>
 <body>
@@ -278,7 +324,7 @@ html, body {
 
   <div class="cleo-container" id="cleoContainer">
     <div class="cleo-svg-wrap" id="cleoGlowWrap">
-      <svg viewBox="0 0 280 370" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <svg viewBox="0 0 280 430" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%">
         <defs>
           <radialGradient id="bG" cx="38%" cy="28%" r="68%">
             <stop offset="0%" stop-color="#f2fbff"/>
@@ -342,15 +388,33 @@ html, body {
             <stop offset="100%" stop-color="#a04000"/>
           </radialGradient>
           
-          <linearGradient id="flameGrad" x1="140" y1="270" x2="140" y2="360" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#ffffff"/>
-            <stop offset="25%" stop-color="#ffea00"/>
-            <stop offset="60%" stop-color="#ff6a00"/>
-            <stop offset="100%" stop-color="#ff1a00" stop-opacity="0"/>
+          <linearGradient id="thrusterPlumeOuter" x1="140" y1="265" x2="140" y2="425" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ffb700" stop-opacity="0.95"/>
+            <stop offset="20%" stop-color="#ff6a00" stop-opacity="0.8"/>
+            <stop offset="65%" stop-color="#ff3c00" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#ff2200" stop-opacity="0"/>
+          </linearGradient>
+
+          <linearGradient id="thrusterPlumeInner" x1="140" y1="265" x2="140" y2="375" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="30%" stop-color="#ffff85" stop-opacity="0.95"/>
+            <stop offset="70%" stop-color="#ffb700" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#ff5500" stop-opacity="0"/>
           </linearGradient>
           
           <radialGradient id="gG" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#ffe080"/><stop offset="100%" stop-color="#c87800"/></radialGradient>
           <radialGradient id="rG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff7388" stop-opacity="0.65"/><stop offset="100%" stop-color="#f04156" stop-opacity="0"/></radialGradient>
+          
+          <filter id="blurFlameOuter" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="8.5"/>
+          </filter>
+          <filter id="blurFlameOuterDistort" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="10"/>
+          </filter>
+          <filter id="blurFlameInner" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3.5"/>
+          </filter>
+          
           <filter id="bigGlow"><feGaussianBlur stdDeviation="4" result="bl"/><feMerge><feMergeNode in="bl"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           <filter id="sh"><feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="rgba(0,0,0,.3)"/></filter>
           <filter id="sh2"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,.2)"/></filter>
@@ -358,63 +422,67 @@ html, body {
         </defs>
 
         <g id="rocketFlameGroup">
-          <path d="M115 268 Q140 370 140 370 Q140 370 165 268 Z" fill="url(#flameGrad)" filter="url(#bigGlow)"/>
-          <path d="M125 268 Q140 330 140 330 Q140 330 155 268 Z" fill="#ffffff" filter="url(#bigGlow)"/>
+          <path class="fire-plume-blur-outer" d="M90 264 Q65 330 95 395 Q140 435 140 435 Q140 435 185 395 Q215 330 190 264 Z" fill="url(#thrusterPlumeOuter)" filter="url(#blurFlameOuter)" transform-origin="140px 264px"/>
+          <path class="fire-plume-blur-inner" d="M102 264 Q85 315 110 370 Q140 400 140 400 Q140 400 170 370 Q195 315 178 264 Z" fill="url(#thrusterPlumeInner)" filter="url(#blurFlameInner)" transform-origin="140px 264px"/>
         </g>
 
-        <ellipse id="baseShadow" cx="140" cy="274" rx="50" ry="7" fill="rgba(0,180,255,.1)"/>
+        <ellipse id="baseShadow" cx="140" cy="272" rx="46" ry="6" fill="rgba(0,180,255,.08)"/>
 
-        <path d="M85 168 Q80 232 82 268 L198 268 Q200 232 195 168 Q178 154 140 152 Q102 154 85 168Z" fill="url(#bG)" filter="url(#sh)"/>
+        <g class="cleo-interactive-target">
+          <path d="M85 168 Q80 232 82 266 L198 266 Q200 232 195 168 Q178 154 140 152 Q102 154 85 168Z" fill="url(#bG)" filter="url(#sh)"/>
 
-        <circle cx="114" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        <circle cx="140" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
-        <circle cx="166" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+          <circle cx="114" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+          <circle cx="140" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
+          <circle cx="166" cy="210" r="9" fill="url(#gG)" filter="url(#sh2)"/>
 
-        <rect x="112" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.23)" stroke="rgba(0,220,255,.4)" stroke-width="1"/>
-        <text x="140" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
+          <rect x="112" y="234" width="56" height="20" rx="8" fill="rgba(0,100,200,.23)" stroke="rgba(0,220,255,.4)" stroke-width="1"/>
+          <text x="140" y="248" text-anchor="middle" font-family="'Syne',sans-serif" font-size="9" font-weight="800" fill="#00dcff" letter-spacing="2.5">CLEO</text>
 
-        <g id="leftSideArm" class="left-side-arm-group">
-          <path d="M87 170 Q60 188 56 220 Q54 238 64 242 Q76 246 82 230 Q88 212 98 186Z" fill="url(#bG)" filter="url(#sh2)"/>
-          <ellipse cx="62" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
-        </g>
-
-        <g id="rightSideArm" class="right-side-arm-group">
-          <path d="M193 170 Q220 188 224 220 Q226 238 216 242 Q204 246 198 230 Q192 212 182 186Z" fill="url(#bG)" filter="url(#sh2)"/>
-          <ellipse cx="218" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
-        </g>
-
-        <ellipse cx="140" cy="153" rx="24" ry="6" fill="url(#gG)" filter="url(#sh2)"/>
-        <rect x="124" y="134" width="32" height="22" rx="11" fill="url(#bG)" filter="url(#sh2)"/>
-
-        <ellipse cx="140" cy="80" rx="68" ry="64" fill="url(#hG)" filter="url(#sh)"/>
-
-        <rect id="antennaStem" x="138" y="10" width="4" height="10" rx="2" fill="#00dcff"/>
-        <ellipse id="antennaGlowNode" cx="140" cy="9" rx="6" ry="5" fill="#00dcff" filter="url(#bigGlow)"/>
-
-        <circle id="earLeft"  cx="66"  cy="84" r="14" fill="url(#earGlow)"  filter="url(#sh2)"/>
-        <circle id="earRight" cx="214" cy="84" r="14" fill="url(#earGlow)" filter="url(#sh2)"/>
-
-        <rect id="visorBg" x="78" y="54" width="124" height="62" rx="28" fill="url(#vG)"/>
-        <rect class="visor-scanlines" x="78" y="54" width="124" height="62" rx="28" fill="url(#scanlines)" opacity="1"/>
-
-        <ellipse id="blushLeft"  cx="94"  cy="98" rx="10" ry="5" fill="url(#rG)" opacity="0.9"/>
-        <ellipse id="blushRight" cx="186" cy="98" rx="10" ry="5" fill="url(#rG)" opacity="0.9"/>
-
-        <g id="eyeGroup">
-          <g id="leftEyePair" transform-origin="114px 84px">
-            <ellipse cx="114" cy="84" rx="14" ry="15" fill="white"/>
-            <circle id="eyeLeftPupil"  cx="114" cy="84" r="8" fill="#0c1a30"/>
-            <circle id="eyeLeftShine"  cx="111" cy="81" r="3" fill="white"/>
+          <g id="leftSideArm" class="left-side-arm-group">
+            <path d="M87 170 Q60 188 56 220 Q54 238 64 242 Q76 246 82 230 Q88 212 98 186Z" fill="url(#bG)" filter="url(#sh2)"/>
+            <ellipse cx="62" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
           </g>
 
-          <g id="rightEyePair" transform-origin="166px 84px">
-            <ellipse cx="166" cy="84" rx="14" ry="15" fill="white"/>
-            <circle id="eyeRightPupil" cx="166" cy="84" r="8" fill="#0c1a30"/>
-            <circle id="eyeRightShine" cx="163" cy="81" r="3" fill="white"/>
+          <g id="rightSideArm" class="right-side-arm-group">
+            <path d="M193 170 Q220 188 224 220 Q226 238 216 242 Q204 246 198 230 Q192 212 182 186Z" fill="url(#bG)" filter="url(#sh2)"/>
+            <ellipse cx="218" cy="243" rx="13" ry="15" fill="url(#bG)" filter="url(#sh2)"/>
           </g>
-        </g>
 
-        <path id="robotMouth" d="M130 102 Q140 110 150 102" stroke="#5ef0ff" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <ellipse cx="140" cy="153" rx="24" ry="6" fill="url(#gG)" filter="url(#sh2)"/>
+          <rect x="124" y="134" width="32" height="22" rx="11" fill="url(#bG)" filter="url(#sh2)"/>
+
+          <ellipse cx="140" cy="80" rx="68" ry="64" fill="url(#hG)" filter="url(#sh)"/>
+
+          <rect id="antennaStem" x="138" y="10" width="4" height="10" rx="2" fill="#00dcff"/>
+          <ellipse id="antennaGlowNode" cx="140" cy="9" rx="6" ry="5" fill="#00dcff" filter="url(#bigGlow)"/>
+
+          <circle id="earLeft"  cx="66"  cy="84" r="14" fill="url(#earGlow)"  filter="url(#sh2)"/>
+          <circle id="earRight" cx="214" cy="84" r="14" fill="url(#earGlow)" filter="url(#sh2)"/>
+
+          <rect id="visorBg" x="78" y="54" width="124" height="62" rx="28" fill="url(#vG)"/>
+          <rect class="visor-scanlines" x="78" y="54" width="124" height="62" rx="28" fill="url(#scanlines)" opacity="1"/>
+
+          <ellipse id="blushLeft"  cx="94"  cy="98" rx="10" ry="5" fill="url(#rG)" opacity="0.9"/>
+          <ellipse id="blushRight" cx="186" cy="98" rx="10" ry="5" fill="url(#rG)" opacity="0.9"/>
+
+          <g id="eyeGroup">
+            <g id="leftEyePair" transform-origin="112px 84px">
+              <circle cx="112" cy="84" r="14" fill="white"/>
+              <circle id="eyeLeftPupil"  cx="112" cy="84" r="9" fill="#081022"/>
+              <circle id="eyeLeftShine"  cx="109.5" cy="81.5" r="3.2" fill="white"/>
+              <circle cx="115" cy="87" r="1.5" fill="white" opacity="0.6"/>
+            </g>
+
+            <g id="rightEyePair" transform-origin="168px 84px">
+              <circle cx="168" cy="84" r="14" fill="white"/>
+              <circle id="eyeRightPupil" cx="168" cy="84" r="9" fill="#081022"/>
+              <circle id="eyeRightShine" cx="165.5" cy="81.5" r="3.2" fill="white"/>
+              <circle cx="171" cy="87" r="1.5" fill="white" opacity="0.6"/>
+            </g>
+          </g>
+
+          <path id="robotMouth" d="M130 102 Q140 110 150 102" stroke="#5ef0ff" stroke-width="3" stroke-linecap="round" fill="none"/>
+        </g>
       </svg>
     </div>
   </div>
@@ -422,6 +490,8 @@ html, body {
   <div class="chat-bubble" id="chatBubble">
     <span id="typedText"><span id="cursor"></span></span>
   </div>
+
+  <div class="cursor-poke-note" id="pokeNote">DO NOT POKE..</div>
 
 </div>
 
@@ -434,8 +504,8 @@ const moods = [
     mouthD: "M132 100 Q140 108 148 100",
     mouthStroke: "#ffaa00",
     blushOpacity: "1",
-    earFill: "url(#earGlowCheeky)", // Orange Ears Sync!
-    antennaColor: "#ffaa00",         // Antenna Color Sync!
+    earFill: "url(#earGlowCheeky)",
+    antennaColor: "#ffaa00",
     glowFilter: "drop-shadow(0 16px 40px rgba(255,170,0,0.22))",
     bubbleClass: "bubble-cheeky",
     cursorColor: "#ffaa00",
@@ -457,7 +527,7 @@ const moods = [
     mouthStroke: "#ff3b3b",
     blushOpacity: "0.1",
     earFill: "url(#earGlowPanic)",
-    antennaColor: "#ff3b3b",         // Antenna Color Sync!
+    antennaColor: "#ff3b3b",
     glowFilter: "drop-shadow(0 16px 40px rgba(255,50,50,0.4))",
     bubbleClass: "bubble-panic",
     cursorColor: "#ff3b3b",
@@ -479,7 +549,7 @@ const moods = [
     mouthStroke: "#b899ff",
     blushOpacity: "0.7",
     earFill: "url(#earGlowDreamy)",
-    antennaColor: "#c8a0ff",         // Antenna Color Sync!
+    antennaColor: "#c8a0ff",
     glowFilter: "drop-shadow(0 16px 40px rgba(160,100,255,0.28))",
     bubbleClass: "bubble-dreamy",
     cursorColor: "#b899ff",
@@ -515,49 +585,65 @@ const antNode       = document.getElementById('antennaGlowNode');
 const bubble        = document.getElementById('chatBubble');
 const typed         = document.getElementById('typedText');
 const cursor        = document.getElementById('cursor');
+const pokeNote      = document.getElementById('pokeNote');
 
 const eyeLP         = document.getElementById('eyeLeftPupil');
 const eyeRP         = document.getElementById('eyeRightPupil');
 const eyeLS         = document.getElementById('eyeLeftShine');
 const eyeRS         = document.getElementById('eyeRightShine');
 const svg           = widget.querySelector('svg');
+const targetGroup   = widget.querySelector('.cleo-interactive-target');
 
-const eyeBaseL = { cx: 114, cy: 84 };
-const eyeBaseR = { cx: 166, cy: 84 };
-const maxOffset = 3.0;
+const eyeBaseL = { cx: 112, cy: 84 };
+const eyeBaseR = { cx: 168, cy: 84 };
+const maxOffset = 3.5;
 
-function updatePupils(e) {
+function trackVectorMovements(e) {
   if (!activePresence || container.classList.contains('rocket-jetting-right')) return;
+  
+  // 1. Calculate Eye Tracking Shifts
   const rect = svg.getBoundingClientRect();
   const mx = ((e.clientX - rect.left) / rect.width) * 280;
-  const my = ((e.clientY - rect.top)  / rect.height) * 370;
+  const my = ((e.clientY - rect.top)  / rect.height) * 430;
 
   function movePupil(base, pupilEl, shineEl) {
     const dx = mx - base.cx;
     const dy = my - base.cy;
     const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-    const ox = (dx/dist) * Math.min(dist * 0.18, maxOffset);
-    const oy = (dy/dist) * Math.min(dist * 0.18, maxOffset);
+    const ox = (dx/dist) * Math.min(dist * 0.15, maxOffset);
+    const oy = (dy/dist) * Math.min(dist * 0.15, maxOffset);
     pupilEl.setAttribute('cx', base.cx + ox);
     pupilEl.setAttribute('cy', base.cy + oy);
-    shineEl.setAttribute('cx', base.cx + ox - 3);
-    shineEl.setAttribute('cy', base.cy + oy - 3);
+    shineEl.setAttribute('cx', base.cx + ox - 2.5);
+    shineEl.setAttribute('cy', base.cy + oy - 2.5);
   }
-
   movePupil(eyeBaseL, eyeLP, eyeLS);
   movePupil(eyeBaseR, eyeRP, eyeRS);
+
+  // 2. Continuous Micro Note Tracking relative to global frame boundaries
+  const widgetRect = widget.getBoundingClientRect();
+  const noteX = e.clientX - widgetRect.left;
+  const noteY = e.clientY - widgetRect.top;
+  pokeNote.style.left = noteX + 'px';
+  pokeNote.style.top = noteY + 'px';
 }
 
 function resetPupils() {
   eyeLP.setAttribute('cx', eyeBaseL.cx); eyeLP.setAttribute('cy', eyeBaseL.cy);
   eyeRP.setAttribute('cx', eyeBaseR.cx); eyeRP.setAttribute('cy', eyeBaseR.cy);
-  eyeLS.setAttribute('cx', 111); eyeLS.setAttribute('cy', 81);
-  eyeRS.setAttribute('cx', 163); eyeRS.setAttribute('cy', 81);
+  eyeLS.setAttribute('cx', 109.5); eyeLS.setAttribute('cy', 81.5);
+  eyeRS.setAttribute('cx', 165.5); eyeRS.setAttribute('cy', 81.5);
 }
 
-widget.addEventListener('mousemove', updatePupils);
+// Global movement handling to keep Note tracking hyper-responsive
+window.addEventListener('mousemove', (e) => {
+  if (isHovered) {
+    trackVectorMovements(e);
+  }
+});
 
-container.addEventListener('click', (e) => {
+// Click updates mood chain sequence
+targetGroup.addEventListener('click', (e) => {
   e.stopPropagation();
   if (!isHovered || !activePresence || container.classList.contains('rocket-jetting-right') || container.classList.contains('rocket-spawning')) return;
   currentMoodIdx = (currentMoodIdx + 1) % moods.length;
@@ -565,9 +651,12 @@ container.addEventListener('click', (e) => {
   triggerTyping();
 });
 
-widget.addEventListener('mouseenter', () => {
+// ENTERING EXCLUSIVELY VALID VECTOR LANDMARKS 
+targetGroup.addEventListener('mouseenter', () => {
   isHovered = true;
   widget.classList.add('active-hover');
+  container.classList.add('cleo-body-hovered');
+  pokeNote.classList.add('visible');
 
   if (exitTimeout) {
     clearTimeout(exitTimeout);
@@ -587,10 +676,13 @@ widget.addEventListener('mouseenter', () => {
   }
 });
 
-widget.addEventListener('mouseleave', () => {
+// LEAVING VECTOR SHAPE BOUNDARIES
+targetGroup.addEventListener('mouseleave', () => {
   isHovered = false;
   widget.classList.remove('active-hover');
+  container.classList.remove('cleo-body-hovered');
   bubble.classList.remove('visible');
+  pokeNote.classList.remove('visible');
   stopParticles();
   resetPupils();
   resetArmMovementStyles();
@@ -616,7 +708,7 @@ function executeCoolRocketIntro() {
       applyMoodStyle();
       triggerTyping();
     }
-  }, 1050); // Slower landing completion time matched
+  }, 1050);
 }
 
 function resetArmMovementStyles() {
@@ -635,7 +727,6 @@ function executeCoolRocketExitRight() {
   mouth.setAttribute('d', 'M130 102 Q140 107 150 102'); 
   mouth.setAttribute('stroke', '#ff7300');
   
-  // Dynamic Antenna Sync on Exit
   antStem.setAttribute('fill', '#ff7300');
   antNode.setAttribute('fill', '#ff7300');
   earL.setAttribute('fill', 'url(#earGlowBye)');
@@ -709,20 +800,23 @@ function startRocketSparkTrail() {
     const wrapperRect = widget.getBoundingClientRect();
     
     const px = (rect.left - wrapperRect.left) + (rect.width / 2) - 10 + (Math.random() * 20);
-    const py = (rect.top - wrapperRect.top) + (rect.height) - 40;
+    const py = (rect.top - wrapperRect.top) + (rect.height) - 75;
     
     spark.style.left = px + 'px';
     spark.style.top  = py + 'px';
-    spark.style.background  = Math.random() > 0.4 ? '#ff7300' : '#ffea00';
-    spark.style.boxShadow   = '0 0 8px #ff7300';
+    spark.style.width = '3px';
+    spark.style.height = '6px';
+    spark.style.borderRadius = '2px';
+    spark.style.background  = Math.random() > 0.4 ? '#ff5500' : '#ffaa00';
+    spark.style.boxShadow   = '0 0 6px #ff3300';
     widget.appendChild(spark);
     
     const anim = spark.animate([
-      { opacity: 1, transform: 'scale(1.2) translate(0,0)' },
-      { opacity: 0, transform: 'scale(0) translate(-30px, 40px)' }
-    ], { duration: 250 + Math.random() * 200, easing: 'ease-out' });
+      { opacity: 1, transform: 'scaleY(1.5) translate(0,0)' },
+      { opacity: 0, transform: 'scaleY(0.2) translate(-20px, 60px)' }
+    ], { duration: 200 + Math.random() * 150, easing: 'ease-out' });
     anim.onfinish = () => spark.remove();
-  }, 25);
+  }, 15);
 }
 
 function applyMoodStyle() {
@@ -742,7 +836,6 @@ function applyMoodStyle() {
   blushL.setAttribute('opacity', m.blushOpacity);
   blushR.setAttribute('opacity', m.blushOpacity);
   
-  // Dynamic Sync Matrix Applications
   earL.setAttribute('fill', m.earFill);
   earR.setAttribute('fill', m.earFill);
   antStem.setAttribute('fill', m.antennaColor);
